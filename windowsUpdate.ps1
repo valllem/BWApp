@@ -1,4 +1,5 @@
-﻿Install-Module PSWindowsUpdate -Force
+﻿Clear-Host
+Install-Module PSWindowsUpdate -Force
 Get-WindowsUpdate
 Install-WindowsUpdate -Force
 
