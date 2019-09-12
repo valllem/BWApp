@@ -1,10 +1,4 @@
-﻿if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')) {
- if ([int](Get-CimInstance -Class Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber) -ge 6000) {
-  $CommandLine = "-File `"" + $MyInvocation.MyCommand.Path + "`" " + $MyInvocation.UnboundArguments
-  Start-Process -FilePath PowerShell.exe -Verb Runas -ArgumentList $CommandLine
-  
-
-$UserCredential = Get-Credential
+﻿$UserCredential = Get-Credential
 $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $UserCredential -Authentication Basic -AllowRedirection
 Import-PSSession $Session -DisableNameChecking
 Start-Sleep -Seconds 1
@@ -37,7 +31,7 @@ Function Menu
         Write-Host -Object ''
         Write-Host -Object '4.  WINDOWS MANAGEMENT ' -ForegroundColor Magenta
         Write-Host -Object ''
-        Write-Host -Object '5.  Configuration... ' -ForegroundColor DarkMagenta
+        Write-Host -Object '5.  Configuration... ' -ForegroundColor Magenta
         Write-Host -Object ''
         Write-Host -Object 'Q.  Quit' -ForegroundColor DarkYellow
         Write-Host -Object $errout
@@ -91,5 +85,3 @@ Function Menu
 Menu
 
 Exit
- }
-}

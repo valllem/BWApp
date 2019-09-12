@@ -12,7 +12,7 @@
         Write-Host -Object ''
         Write-Host -Object '2.  Remove User Full Access '
         Write-Host -Object ''
-        Write-Host -Object '3.  Grant User Send As or Send on Behalf Permissions '
+        Write-Host -Object '3.  Grant User Send As Permissions '
         Write-Host -Object ''
         Write-Host -Object '4.  Forward Emails '
         Write-Host -Object ''

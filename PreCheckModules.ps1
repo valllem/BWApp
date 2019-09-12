@@ -81,5 +81,3 @@ Write-host 'Press any Key to return to the Menu'
 ##-- Waits for user input before continuing --##
 $HOST.UI.RawUI.ReadKey(“NoEcho,IncludeKeyDown”) | OUT-NULL
 $HOST.UI.RawUI.Flushinputbuffer()
-}
-}
