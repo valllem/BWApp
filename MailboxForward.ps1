@@ -1,4 +1,6 @@
-﻿$message  = ''
+﻿Clear-Host
+
+$message  = ''
 $question = 'Do you want to keep a copy in the original mailbox? (Recommend: Yes)'
 $choices  = '&Yes', '&No'
 

@@ -34,7 +34,9 @@ Function Menu
         Write-Host -Object ''
         Write-Host -Object '5.  Configuration... ' -ForegroundColor Magenta
         Write-Host -Object ''
-        Write-Host -Object 'Q.  Quit' -ForegroundColor DarkYellow
+        Write-Host -Object '6.  365 Security ' -ForegroundColor Magenta
+        Write-Host -Object ''
+        Write-Host -Object 'Q.  Quit Application' -ForegroundColor Red
         Write-Host -Object $errout
         $Menu = Read-Host -Prompt '(0-3 or Q to Quit)'
  
@@ -63,6 +65,11 @@ Function Menu
             5 
             {
                 .\menuConfiguration.ps1
+                anyKey
+            }
+            6 
+            {
+                .\menu365Security.ps1
                 anyKey
             }
             Q 

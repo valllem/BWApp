@@ -15,10 +15,6 @@ Function Menu
 
         Write-Host -Object '1.  Create Team '
         Write-Host -Object ''
-        Write-Host -Object '2.  **COMING SOON** Add Member to Team '
-        Write-Host -Object ''
-        Write-Host -Object '3.  **COMING SOON** Remove Member from Team '
-        Write-Host -Object ''
         Write-Host -Object 'Q.  Quit'
         Write-Host -Object $errout
         $Menu = Read-Host -Prompt '(0-3 or Q to Quit)'
