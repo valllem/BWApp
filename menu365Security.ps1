@@ -14,6 +14,10 @@
         Write-Host -Object ''
         Write-Host -Object '3.  CHECK Audit Logging status '
         Write-Host -Object ''
+        Write-Host -Object '4.  Block EMAIL '
+        Write-Host -Object ''
+        Write-Host -Object '5.  Block DOMAIN '
+        Write-Host -Object ''
         Write-Host -Object ''
         Write-Host -Object 'Q.  Quit'
         Write-Host -Object $errout
@@ -34,6 +38,16 @@
             3 
             {
                 .\365CheckAuditLog.ps1
+                anyKey
+            }
+            4 
+            {
+                .\365BlockSender.ps1
+                anyKey
+            }
+            5 
+            {
+                .\365BlockDomain.ps1
                 anyKey
             }
             Q 
