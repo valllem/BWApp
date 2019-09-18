@@ -18,6 +18,8 @@
         Write-Host -Object ''
         Write-Host -Object '5.  Block DOMAIN '
         Write-Host -Object ''
+        Write-Host -Object '6.  PREPARE TENANCY (SECURITY) '
+        Write-Host -Object ''
         Write-Host -Object ''
         Write-Host -Object 'Q.  Quit'
         Write-Host -Object $errout
@@ -48,6 +50,11 @@
             5 
             {
                 .\365BlockDomain.ps1
+                anyKey
+            }
+            6 
+            {
+                .\prepareTenant.ps1
                 anyKey
             }
             Q 

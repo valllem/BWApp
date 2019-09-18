@@ -7,6 +7,7 @@ Connect-AzureAD -Credential $UserCredential
 Connect-MsolService -Credential $UserCredential
 
 
+
 Function Menu 
 {
     Clear-Host        
@@ -24,21 +25,21 @@ Function Menu
         Write-Host -ForegroundColor Yellow ''
         Write-Host -ForegroundColor Yellow ''
         
-        Write-Host -Object '1.  TEAMS MANAGEMENT ** Under Development ** ' -ForegroundColor Gray
+        Write-Host -Object '  1.  TEAMS MANAGEMENT ** Under Development ** ' -ForegroundColor Gray
         Write-Host -Object ''
-        Write-Host -Object '2.  CALENDAR MANAGEMENT ' -ForegroundColor Magenta
+        Write-Host -Object '  2.  CALENDAR MANAGEMENT ' -ForegroundColor Magenta
         Write-Host -Object ''
-        Write-Host -Object '3.  MAILBOX MANAGEMENT ' -ForegroundColor Magenta
+        Write-Host -Object '  3.  MAILBOX MANAGEMENT ' -ForegroundColor Magenta
         Write-Host -Object ''
-        Write-Host -Object '4.  WINDOWS MANAGEMENT ' -ForegroundColor Magenta
+        Write-Host -Object '  4.  WINDOWS MANAGEMENT ' -ForegroundColor Magenta
         Write-Host -Object ''
-        Write-Host -Object '5.  Configuration... ' -ForegroundColor Magenta
+        Write-Host -Object '  5.  Configuration... ' -ForegroundColor Magenta
         Write-Host -Object ''
-        Write-Host -Object '6.  365 Security ' -ForegroundColor Magenta
+        Write-Host -Object '  6.  365 Security ' -ForegroundColor Magenta
         Write-Host -Object ''
-        Write-Host -Object '7.  USER MANAGEMENT ' -ForegroundColor Magenta
+        Write-Host -Object '  7.  USER MANAGEMENT ' -ForegroundColor Magenta
         Write-Host -Object ''
-        Write-Host -Object 'Q.  Quit Application' -ForegroundColor Red
+        Write-Host -Object '  Q.  Quit Application' -ForegroundColor Red
         Write-Host -Object $errout
         $Menu = Read-Host -Prompt '(0-3 or Q to Quit)'
  
@@ -77,6 +78,11 @@ Function Menu
             7 
             {
                 .\menuUsers.ps1
+                anyKey
+            }
+            99 
+            {
+                .\testscript.ps1
                 anyKey
             }
             Q 

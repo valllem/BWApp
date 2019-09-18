@@ -20,6 +20,8 @@
         Write-Host -Object ''
         Write-Host -Object '6.  Remove User Full Access to ALL MAILBOXES '
         Write-Host -Object ''
+        Write-Host -Object '7.  Check Message Logs (Last 48 hours) '
+        Write-Host -Object ''
         Write-Host -Object 'Q.  Quit'
         Write-Host -Object $errout
         $Menu = Read-Host -Prompt '(0-3 or Q to Quit)'
@@ -54,6 +56,11 @@
             6 
             {
                 .\MailboxRemoveALL.ps1
+                anyKey
+            }
+            7 
+            {
+                .\365MessageTrace.ps1
                 anyKey
             }
             Q 

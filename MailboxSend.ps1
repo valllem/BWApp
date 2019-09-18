@@ -20,7 +20,7 @@ Add-RecipientPermission $UserIdentity -AccessRights SendAs -Trustee $UserEmail
 
 
 ##--Show result--##
-write-Host -ForegroundColor Green ' $UserEmail can now send email as $UserIdentity '
+write-Host -ForegroundColor Green "" $UserEmail " can now send email as " $UserIdentity ""
 write-Host -ForegroundColor Green 'Please allow a few minutes for the changes to take effect.'
 write-Host -ForegroundColor Green 'Press any key to return to previous menu.'
 
