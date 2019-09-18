@@ -3,15 +3,44 @@
 $colourInfo = "green"
 $colourAlert = "cyan"
 $colourError = "red"
+
+
+
+
+$CASMailbox = Get-CASMailboxPlan
+
+foreach ($CAS in $CASMailbox) {
+             
+    write-host -foregroundcolor $colourInfo "================================="
+    Set-casmailbox $CAS -popenabled $false
+    write-host -foregroundcolor $colourInfo "Disabled POP for " $CAS ""  
+    Set-casmailbox $CAS -imapenabled $false
+    write-host -foregroundcolor $colourInfo "Disabled IMAP for " $mailbox ""
+    write-host -foregroundcolor $colourInfo "================================="
+}
+
+Read-Host -Prompt 'Press Enter to continue...'
+
+
+
+
+
+
+
+
+
+
+## Information
 write-host -ForegroundColor $colourAlert 'First we need some information'
 write-host -ForegroundColor $colourAlert '=============================='
 write-host
 write-host
-
 $domains=read-host -prompt 'Enter Tenant Email DOMAIN for Spam Policy...'
 Write-Host -foregroundcolor $colourAlert "Enter your Sharepoint url E.g https://busworks-admin.sharepoint.com"
+##Import connection to sharepoint - this will request the admin url E.g https://busworks-admin.sharepoint.com
 Connect-SPOService -Credential $UserCredential
 
+## Lock Down each existing mailbox
 $mailboxes = Get-mailbox
 foreach ($mailbox in $mailboxes) {
              

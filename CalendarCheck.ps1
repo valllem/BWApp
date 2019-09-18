@@ -15,7 +15,7 @@
 Write-Host -ForegroundColor Yellow "Who's Calendar do you want to Check?"
 $UserIdentity = Read-Host 'Enter Users Email Address...'
 
-Get-MailboxFolderPermission -identity ($UserIdentity+':\calendar')
+Get-MailboxFolderPermission -identity ($UserIdentity+':\calendar') | out-gridview
 
 
 write-Host -ForegroundColor Yellow ''
