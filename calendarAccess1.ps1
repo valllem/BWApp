@@ -1,23 +1,16 @@
-﻿
-
-write-Host -ForegroundColor Green '======================================='
-write-Host -ForegroundColor Green '        GRANT USER FULL ACCESS         '
-write-Host -ForegroundColor Green '======================================='
-write-Host -ForegroundColor Green ' '
+﻿write-Host -ForegroundColor Yellow '======================================='
+write-Host -ForegroundColor Yellow '       GRANT USER CALENDAR ACCESS      '
+write-Host -ForegroundColor Yellow '======================================='
+write-Host -ForegroundColor Yellow ' '
 
 
 Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()
-try {
 $mailboxes = Get-Mailbox |Select-Object PrimarySmtpAddress
-}
 
-catch {
-write-host -ForegroundColor Red "NOT LOGGED IN. Please select 'switch account' on the main menu "
-}
 $calendarAccess1                 = New-Object system.Windows.Forms.Form
-$calendarAccess1.ClientSize      = '800,420'
-$calendarAccess1.text            = "Give Mailbox Access"
+$calendarAccess1.ClientSize      = '800,600'
+$calendarAccess1.text            = "Give Calendar Access"
 $calendarAccess1.TopMost         = $false
 $calendarAccess1.StartPosition = 'CenterScreen'
 
@@ -60,7 +53,7 @@ $Identity.text                   = "Account to Access"
 $Identity.AutoSize               = $true
 $Identity.width                  = 25
 $Identity.height                 = 10
-$Identity.location               = New-Object System.Drawing.Point(62,49)
+$Identity.location               = New-Object System.Drawing.Point(66,49)
 $Identity.Font                   = 'Microsoft Sans Serif,10'
 $calendarAccess1.Controls.Add($Identity)
 
@@ -69,7 +62,7 @@ $User.text                       = "Person Getting Access"
 $User.AutoSize                   = $true
 $User.width                      = 25
 $User.height                     = 10
-$User.location                   = New-Object System.Drawing.Point(340,49)
+$User.location                   = New-Object System.Drawing.Point(350,49)
 $User.Font                       = 'Microsoft Sans Serif,10'
 $calendarAccess1.Controls.Add($User)
 
@@ -77,11 +70,11 @@ $ListBox3                        = New-Object system.Windows.Forms.ListBox
 $ListBox3.text                   = "listBox"
 $ListBox3.width                  = 175
 $ListBox3.height                 = 260
-@("Yes","No") | ForEach-Object {[void] $ListBox3.Items.Add($_)}
+@('Limited Details','Author','Publishing Editor','Owner') | ForEach-Object {[void] $ListBox3.Items.Add($_)}
 $ListBox3.location               = New-Object System.Drawing.Point(595,77)
 
 $permission                      = New-Object system.Windows.Forms.Label
-$permission.text                 = "Add to Outlook?"
+$permission.text                 = "Permission"
 $permission.AutoSize             = $true
 $permission.width                = 25
 $permission.height               = 10
@@ -100,29 +93,22 @@ $calendarAccess1.Topmost = $true
 
 $result = $calendarAccess1.ShowDialog()
 
-if ($result -eq [System.Windows.Forms.DialogResult]::OK){
+if ($result -eq [System.Windows.Forms.DialogResult]::OK)
+{
     $x = $ListBox1.SelectedItem
     $y = $ListBox2.SelectedItem
     $z = $ListBox3.SelectedItem
-
-write-host 'Removing any existing permissions in place for' $x
-if ($z -eq "Yes") {
-    Remove-MailboxPermission -Identity $x -User "$y" -AccessRights FullAccess -Confirm:$false -ErrorAction SilentlyContinue
-    write-host 'Adding Permissions...'
-    Add-MailboxPermission -Identity $x -User "$y" -AccessRights FullAccess -AutoMapping $true
-} elseif ($z -eq "No") {
-    Remove-MailboxPermission -Identity $x -User "$y" -AccessRights FullAccess -Confirm:$false -ErrorAction SilentlyContinue
-    write-host 'Adding Permissions...'
-    Add-MailboxPermission -Identity $x -User "$y" -AccessRights FullAccess -AutoMapping $false
-} else {
-write-host 'An error occurred'
-}
+    
+    
+Remove-MailboxFolderPermission $x':\calendar' -User "$y" -Confirm:$false -ErrorAction SilentlyContinue
+write-host 'Adding Permissions...'
+Add-MailboxFolderPermission $x':\calendar' -User "$y" -AccessRights $z -ErrorAction SilentlyContinue
+write-host 'UPDATING Permissions...'
 
 write-host -ForegroundColor Green 'Completed Tasks'
-Start-Sleep -Seconds 4
+Start-Sleep -Seconds 2
 exit
 }
-
 
 
 
