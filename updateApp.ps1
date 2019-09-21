@@ -31,7 +31,7 @@ param ( [string]$SourceLnk, [string]$DestinationPath )
 set-shortcut "$ShortcutDir\BWApp.lnk" "$Path\BWApp-master\Launcher.ps1"
 Start-Sleep -Seconds 2
 Clear-Host
-
+cd "C:\BWApp\BWApp-master"
 
 Write-Host
 Write-Host
