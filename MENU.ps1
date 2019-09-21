@@ -25,6 +25,7 @@ Connect-AzureAD -Credential $UserCredential
 Connect-MsolService -Credential $UserCredential
 }
 catch {
+Clear-Host
 Write-Host -ForegroundColor Yellow "Using MFA...Switching to Modern Auth."
 Write-Host -ForegroundColor Yellow "Please Sign In again"
 Import-Module $((Get-ChildItem -Path $($env:LOCALAPPDATA+"\Apps\2.0\") `
