@@ -7,10 +7,12 @@
  }
 }
 
+Start-Sleep -Seconds 2
 Write-Host "Preparing to Install"
-Write-Host "Please allow the script to run if prompted. `n"
 Set-ExecutionPolicy -Scope CurrentUser Unrestricted -Force
-Read-Host -Prompt "Press Enter to begin Installation"
+Start-Sleep -Seconds 2
+
+
 
 
 
@@ -90,19 +92,30 @@ else {
 }    
 
 if (Get-Module -ListAvailable -Name CreateExoPsSession) {
-    Write-Host -ForegroundColor Green "Exchange MFA Module exists"
+    Write-Host -ForegroundColor Green "Exchange PS Module exists"
 } 
 else {
     Write-Host -foregroundcolor Yellow "Module does not exist..."
-    write-host -foregroundcolor Yellow "Installing Exchange MFA module... This may take a few minutes"
+    write-host -foregroundcolor Yellow "Installing Exchange PS module"
     Install-Script -Name CreateExoPsSession -force 
 }
 
 
+    write-host -foregroundcolor Yellow "Installing latest Exchange Management module..."
+    Install-Module -Name Microsoft.Exchange.Management.ExoPowershellModule -Force -AllowClobber
 
-  
+
+
+    write-host -foregroundcolor Yellow "Installing latest Exchange MFA module"
+    Install-Script -Name Load-ExchangeMFA -Force 
+    Install-Module -Name ExchangeOnlineShell -Force
+
+
     
+
 }
+
+
 else {
     write-host -foregroundcolor $errormessagecolor "*** ERROR *** - Please re-run PowerShell environment as Administrator`n"
 }
@@ -110,13 +123,97 @@ else {
 write-host -foregroundcolor Green "All Modules Installed"
 
 
-
+write-host -foregroundcolor Yellow "Downloading required components..."
 Start-Sleep -Seconds 2
+
+
+
+<# Simple Install Check
+#>
+function Get-ClickOnce {
+[CmdletBinding()]  
+Param(
+    $ApplicationName = "Microsoft Exchange Online Powershell Module"
+)
+    $InstalledApplicationNotMSI = Get-ChildItem HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall | foreach-object {Get-ItemProperty $_.PsPath}
+    return $InstalledApplicationNotMSI | ? { $_.displayname -match $ApplicationName } | Select-Object -First 1
+}
+
+
+Function Test-ClickOnce {
+[CmdletBinding()] 
+Param(
+    $ApplicationName = "Microsoft Exchange Online Powershell Module"
+)
+    return ( (Get-ClickOnce -ApplicationName $ApplicationName) -ne $null) 
+}
+
+
+
+Function Load-ExchangeMFAModule { 
+[CmdletBinding()] 
+Param ()
+    $Modules = @(Get-ChildItem -Path "$($env:LOCALAPPDATA)\Apps\2.0" -Filter "Microsoft.Exchange.Management.ExoPowershellModule.manifest" -Recurse )
+    if ($Modules.Count -ne 1 ) {
+        throw "No or Multiple Modules found : Count = $($Modules.Count )"  
+    }  else {
+        $ModuleName =  Join-path $Modules[0].Directory.FullName "Microsoft.Exchange.Management.ExoPowershellModule.dll"
+        Write-Verbose "Start Importing MFA Module"
+        if ($PSVersionTable.PSVersion -ge "5.0")  { 
+            Import-Module -FullyQualifiedName $ModuleName  -Force 
+        } else { 
+            #in case -FullyQualifiedName is not supported
+            Import-Module $ModuleName  -Force 
+        }
+
+        $ScriptName =  Join-path $Modules[0].Directory.FullName "CreateExoPSSession.ps1"
+        if (Test-Path $ScriptName) {
+            return $ScriptName
+<#
+            # Load the script to add the additional commandlets (Connect-EXOPSSession)
+            # DotSourcing does not work from inside a function (. $ScriptName)
+            #Therefore load the script as a dynamic module instead
+ 
+            $content = Get-Content -Path $ScriptName -Raw -ErrorAction Stop
+            #BugBug >> $PSScriptRoot is Blank :-(
+<#
+            $PipeLine = $Host.Runspace.CreatePipeline()
+            $PipeLine.Commands.AddScript(". $scriptName")
+            $r = $PipeLine.Invoke()
+#Err : Pipelines cannot be run concurrently.
+ 
+            $scriptBlock = [scriptblock]::Create($content)
+            New-Module -ScriptBlock $scriptBlock -Name "Microsoft.Exchange.Management.CreateExoPSSession.ps1" -ReturnResult -ErrorAction SilentlyContinue
+#>
+
+        } else {
+            throw "Script not found"
+            return $null
+        }
+    }
+}
+
+
+if ((Test-ClickOnce -ApplicationName "Microsoft Exchange Online Powershell Module" ) -eq $false)  {
+   Install-ClickOnce -Manifest "https://cmdletpswmodule.blob.core.windows.net/exopsmodule/Microsoft.Online.CSE.PSModule.Client.application"
+}
+#Load the Module
+$script = Load-ExchangeMFAModule -Verbose
+#Dot Source the associated script
+. $Script
+
+#make sure the Exchange session uses the same proxy settings as IE/Edge
+$ProxySetting = New-PSSessionOption -ProxyAccessType IEConfig
+ 
+
+
+
     
 #Download file
 (New-Object System.Net.WebClient).DownloadFile($url, $output)
 Start-Sleep -Seconds 2    
 # Unzip the Archive
+write-host -foregroundcolor Yellow "Extracting..."
 Expand-Archive $output -DestinationPath $Path -Force
 Start-Sleep -Seconds 2    
 #Set the environment variable
@@ -125,6 +222,7 @@ Start-Sleep -Seconds 2
 ##[Environment]::SetEnvironmentVariable("HOME", "$Home", "User")
 
 Start-Sleep -Seconds 2
+write-host -foregroundcolor Yellow "Creating Shortcuts"
 cd $HOME
 cd desktop
 $ShortCutDir = Get-Location
@@ -138,7 +236,7 @@ param ( [string]$SourceLnk, [string]$DestinationPath )
     $Shortcut.Save()
     }
 set-shortcut "$ShortcutDir\BWApp.lnk" "$Path\BWApp-master\Launcher.ps1"
-
+Start-Sleep -Seconds 2
 Clear-Host
 
 
@@ -153,7 +251,4 @@ Write-Host -ForegroundColor Green "                  INSTALLATION COMPLETE.     
 Write-Host
 Write-Host
 Write-Host
-Write-Host
-Write-Host
-Write-Host
-read-host -Prompt 'Press Enter to Close Installer'
+read-host -Prompt '               Press Enter to Close Installer'
