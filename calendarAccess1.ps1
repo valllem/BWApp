@@ -9,7 +9,7 @@ Add-Type -AssemblyName System.Windows.Forms
 $mailboxes = Get-Mailbox |Select-Object PrimarySmtpAddress
 
 $calendarAccess1                 = New-Object system.Windows.Forms.Form
-$calendarAccess1.ClientSize      = '800,600'
+$calendarAccess1.ClientSize      = '800,420'
 $calendarAccess1.text            = "Give Calendar Access"
 $calendarAccess1.TopMost         = $false
 $calendarAccess1.StartPosition = 'CenterScreen'
@@ -53,7 +53,7 @@ $Identity.text                   = "Account to Access"
 $Identity.AutoSize               = $true
 $Identity.width                  = 25
 $Identity.height                 = 10
-$Identity.location               = New-Object System.Drawing.Point(66,49)
+$Identity.location               = New-Object System.Drawing.Point(40,49)
 $Identity.Font                   = 'Microsoft Sans Serif,10'
 $calendarAccess1.Controls.Add($Identity)
 
@@ -62,7 +62,7 @@ $User.text                       = "Person Getting Access"
 $User.AutoSize                   = $true
 $User.width                      = 25
 $User.height                     = 10
-$User.location                   = New-Object System.Drawing.Point(350,49)
+$User.location                   = New-Object System.Drawing.Point(330,49)
 $User.Font                       = 'Microsoft Sans Serif,10'
 $calendarAccess1.Controls.Add($User)
 
@@ -78,7 +78,7 @@ $permission.text                 = "Permission"
 $permission.AutoSize             = $true
 $permission.width                = 25
 $permission.height               = 10
-$permission.location             = New-Object System.Drawing.Point(623,49)
+$permission.location             = New-Object System.Drawing.Point(600,49)
 $permission.Font                 = 'Microsoft Sans Serif,10'
 
 $calendarAccess1.controls.AddRange(@($ListBox1,$ListBox2,$Button1,$Button2,$Identity,$User,$ListBox3,$permission))

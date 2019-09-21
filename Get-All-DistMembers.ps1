@@ -1,4 +1,4 @@
-﻿$Path = "C:\BWApp\Logs"
+﻿$FilePath = "C:\BWApp\Logs"
 Write-Host "Saving csv file to $Path\All-Distribution-Group-Members.csv "
 
 $Result=@()
@@ -18,4 +18,9 @@ RecipientType= $member.RecipientType
 }}
 $i++
 }
-$Result | Export-CSV "$Path\All-Distribution-Group-Members.csv" -NoTypeInformation -Encoding UTF8
+$Result | Export-CSV "$FilePath\All-Distribution-Group-Members.csv" -NoTypeInformation -Encoding UTF8
+
+Write-Host -ForegroundColor Green "Saved to: $FilePath\All-Distribution-Group-Members.csv"
+Write-Host -ForegroundColor Green "Opening File..."
+Start-Sleep -Seconds 2
+Invoke-Item "$FilePath\Permission.csv"

@@ -9,7 +9,7 @@ Add-Type -AssemblyName System.Windows.Forms
 $mailboxes = Get-Mailbox |Select-Object PrimarySmtpAddress
 
 $calendarAccess1                 = New-Object system.Windows.Forms.Form
-$calendarAccess1.ClientSize      = '800,600'
+$calendarAccess1.ClientSize      = '600,420'
 $calendarAccess1.text            = "Give All Calendar Access"
 $calendarAccess1.TopMost         = $false
 $calendarAccess1.StartPosition = 'CenterScreen'
@@ -55,14 +55,14 @@ $ListBox3.text                   = "listBox"
 $ListBox3.width                  = 175
 $ListBox3.height                 = 260
 @("PublishingAuthor","LimitedDetails") | ForEach-Object {[void] $ListBox3.Items.Add($_)}
-$ListBox3.location               = New-Object System.Drawing.Point(595,77)
+$ListBox3.location               = New-Object System.Drawing.Point(360,77)
 
 $permission                      = New-Object system.Windows.Forms.Label
 $permission.text                 = "Which Permission"
 $permission.AutoSize             = $true
 $permission.width                = 25
 $permission.height               = 10
-$permission.location             = New-Object System.Drawing.Point(623,49)
+$permission.location             = New-Object System.Drawing.Point(360,49)
 $permission.Font                 = 'Microsoft Sans Serif,10'
 
 $calendarAccess1.controls.AddRange(@($ListBox1,$Button1,$Button2,$Identity,$ListBox3,$permission))
@@ -146,5 +146,5 @@ write-host 'An error occurred'
 }
 
 write-host -ForegroundColor Green 'Completed Tasks'
-Start-Sleep -Seconds 4
+
 exit

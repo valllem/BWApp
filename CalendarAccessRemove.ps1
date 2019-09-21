@@ -9,7 +9,7 @@ Add-Type -AssemblyName System.Windows.Forms
 $mailboxes = Get-Mailbox |Select-Object PrimarySmtpAddress
 
 $calendarAccess1                 = New-Object system.Windows.Forms.Form
-$calendarAccess1.ClientSize      = '800,600'
+$calendarAccess1.ClientSize      = '600,420'
 $calendarAccess1.text            = "Remove Calendar Access"
 $calendarAccess1.TopMost         = $false
 $calendarAccess1.StartPosition = 'CenterScreen'
@@ -53,7 +53,7 @@ $Identity.text                   = "Account to Remove Access"
 $Identity.AutoSize               = $true
 $Identity.width                  = 25
 $Identity.height                 = 10
-$Identity.location               = New-Object System.Drawing.Point(66,49)
+$Identity.location               = New-Object System.Drawing.Point(40,49)
 $Identity.Font                   = 'Microsoft Sans Serif,10'
 $calendarAccess1.Controls.Add($Identity)
 
@@ -62,7 +62,7 @@ $User.text                       = "Person being removed"
 $User.AutoSize                   = $true
 $User.width                      = 25
 $User.height                     = 10
-$User.location                   = New-Object System.Drawing.Point(350,49)
+$User.location                   = New-Object System.Drawing.Point(340,49)
 $User.Font                       = 'Microsoft Sans Serif,10'
 $calendarAccess1.Controls.Add($User)
 

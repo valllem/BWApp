@@ -1,4 +1,6 @@
-﻿$colourAlert = "Yellow"
+﻿write-host 'Disable User'
+write-host '============'
+$colourAlert = "Yellow"
 $colourInfo = "Green"
 
 
@@ -7,7 +9,7 @@ Add-Type -AssemblyName System.Windows.Forms
 $mailboxes = Get-Mailbox |Select-Object PrimarySmtpAddress
 
 $Form                            = New-Object system.Windows.Forms.Form
-$Form.ClientSize                 = '800,600'
+$Form.ClientSize                 = '420,420'
 $Form.text                       = "Enable User"
 $Form.TopMost                    = $false
 $Form.StartPosition = 'CenterScreen'
@@ -44,7 +46,7 @@ $Identity.text                   = "Account to Enable"
 $Identity.AutoSize               = $true
 $Identity.width                  = 25
 $Identity.height                 = 10
-$Identity.location               = New-Object System.Drawing.Point(66,49)
+$Identity.location               = New-Object System.Drawing.Point(38,49)
 $Identity.Font                   = 'Microsoft Sans Serif,10'
 $Form.Controls.Add($Identity)
 

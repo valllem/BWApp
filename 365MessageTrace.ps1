@@ -1,6 +1,6 @@
 
 $hours = 48     
-$Path = "C:\BWApp\Logs"
+$FilePath = "C:\BWApp\Logs"
 
 
 
@@ -13,8 +13,9 @@ $dateEnd = get-date                         ## get current time
 $dateStart = $dateEnd.AddHours(-$hours)     ## get current time less last $hours
 $results = Get-MessageTrace -StartDate $dateStart -EndDate $dateEnd | Select-Object Received, SenderAddress, RecipientAddress, Subject, Status, ToIP, FromIP, Size, MessageID, MessageTraceID
 $results | out-gridview
-$results | Export-Csv $Path\MessageTrace.csv
+$results | Export-Csv $FilePath\MessageTrace.csv
 
 
-write-host -foregroundcolor Yellow "A copy of the Message Trace has been put in $Path\MessageTrace.csv "
-write-host -foregroundcolor Green "Tasks completed`n"
+Write-Host -ForegroundColor Green "Saved Message Logs to: $FilePath\MessageTrace.csv"
+Write-Host -ForegroundColor Green "Opening Logs..."
+Start-Sleep -Seconds 2

@@ -1,4 +1,5 @@
-﻿if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')) {
+﻿
+if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')) {
  if ([int](Get-CimInstance -Class Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber) -ge 6000) {
   $CommandLine = "-File `"" + $MyInvocation.MyCommand.Path + "`" " + $MyInvocation.UnboundArguments
   Start-Process -FilePath PowerShell.exe -Verb Runas -ArgumentList $CommandLine
@@ -8,23 +9,40 @@
 }
 
 
+
 $Path = Get-Content -Path "C:\Temp\BWApp\Path.txt"
 write-host $Path
 Set-Location -Path $Path
 
-.\PreCheckModules.ps1
 Write-Host "`n"
 Write-Host -ForegroundColor Yellow "Signing In`n"
 
+$UserCredential = Get-Credential
+try {
+$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $UserCredential -Authentication Basic -AllowRedirection
+Import-PSSession $Session -DisableNameChecking
+Start-Sleep -Seconds 1
+Connect-AzureAD -Credential $UserCredential
+Connect-MsolService -Credential $UserCredential
+}
+catch {
+Write-Host -ForegroundColor Yellow "Using MFA...Switching to Modern Auth."
+Write-Host -ForegroundColor Yellow "Please Sign In again"
 Import-Module $((Get-ChildItem -Path $($env:LOCALAPPDATA+"\Apps\2.0\") `
 -Filter Microsoft.Exchange.Management.ExoPowershellModule.dll -Recurse ).FullName|?{$_ -notmatch "_none_"} `
 |select -First 1)
 $EXOSession = New-ExoPSSession
 Import-PSSession $EXOSession
+}
+
+
+
+
+
 
 Clear-Host
 write-host "`n"
-write-host -foregroundcolor Yellow "Connected to 365`n"
+write-host -foregroundcolor Green "Connected to 365`n"
 
 
 
@@ -143,7 +161,7 @@ $LabelUsers.Font                 = 'Microsoft Sans Serif,14,style=Underline'
 
 $ButtonRenameUPN                 = New-Object system.Windows.Forms.Button
 $ButtonRenameUPN.text            = "Change Primary UPN"
-$ButtonRenameUPN.width           = 144
+$ButtonRenameUPN.width           = 145
 $ButtonRenameUPN.height          = 30
 $ButtonRenameUPN.location        = New-Object System.Drawing.Point(30,375)
 $ButtonRenameUPN.Font            = 'Microsoft Sans Serif,10'
@@ -244,7 +262,7 @@ $ButtonAllDistMembers.Font       = 'Microsoft Sans Serif,10'
 
 $ButtonAllPerms                  = New-Object system.Windows.Forms.Button
 $ButtonAllPerms.text             = "All User Permissions"
-$ButtonAllPerms.width            = 138
+$ButtonAllPerms.width            = 140
 $ButtonAllPerms.height           = 30
 $ButtonAllPerms.location         = New-Object System.Drawing.Point(148,236)
 $ButtonAllPerms.Font             = 'Microsoft Sans Serif,10'
@@ -293,4 +311,3 @@ $ButtonAllDistMembers.Add_Click({.\Get-All-DistMembers.ps1})
 $ButtonAllPerms.Add_Click({.\Get-All-Perms.ps1})
 
 $result = $BWApp.ShowDialog()
-
