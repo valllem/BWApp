@@ -1,4 +1,4 @@
-﻿$url = "https://github.com/valllem/BWApp/archive/master.zip"
+$url = "https://github.com/valllem/BWApp/archive/master.zip"
 $Path = "C:\BWApp"
 $output = [IO.Path]::Combine($Path, "BWApp_$Version.zip”)
     
@@ -9,8 +9,7 @@ Start-Sleep -Seconds 2
 write-host -foregroundcolor Yellow "Extracting..."
 Expand-Archive $output -DestinationPath $Path -Force
 Start-Sleep -Seconds 2    
-Exit-PSSession
-$BWApp.Close()
+
 #Set the environment variable
 ##$Home = [IO.Path]::Combine($Path, "BWApp")
     
