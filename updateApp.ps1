@@ -42,6 +42,4 @@ Write-Host
 Write-Host
 Write-Host
 Write-Host -ForegroundColor Green "INSTALLATION COMPLETE.          "
-write-host 'Restarting App...'
-.\launcher.ps1
-Exit
+write-host 'Please Restart App...'
