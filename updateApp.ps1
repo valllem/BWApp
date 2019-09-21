@@ -9,6 +9,8 @@ Start-Sleep -Seconds 2
 write-host -foregroundcolor Yellow "Extracting..."
 Expand-Archive $output -DestinationPath $Path -Force
 Start-Sleep -Seconds 2    
+Exit-PSSession
+$BWApp.Close()
 #Set the environment variable
 ##$Home = [IO.Path]::Combine($Path, "BWApp")
     
@@ -42,6 +44,5 @@ Write-Host
 Write-Host
 Write-Host -ForegroundColor Green "INSTALLATION COMPLETE.          "
 write-host 'Restarting App...'
-Exit-PSSession
-$BWApp.Close()
+.\launcher.ps1
 Exit
