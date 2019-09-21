@@ -74,6 +74,7 @@ else {
     Install-Script -Name CreateExoPsSession -force 
 }
 
+Install-Script -Name Load-ExchangeMFA
 
 
   
