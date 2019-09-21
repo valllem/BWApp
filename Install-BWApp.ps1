@@ -1,6 +1,5 @@
 ﻿
 
-
 if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')) {
  if ([int](Get-CimInstance -Class Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber) -ge 6000) {
   $CommandLine = "-File `"" + $MyInvocation.MyCommand.Path + "`" " + $MyInvocation.UnboundArguments
@@ -11,13 +10,23 @@ if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 }
 
 
+If ((Get-ExecutionPolicy) -ne "RemoteSigned") {    
+    If ((Get-ExecutionPolicy) -ne "Unrestricted") {   
+    Write-Host -ForegroundColor Yellow "Please open another powershell window as administrator and type the following command..."
+    Write-Host -ForegroundColor Yellow "Set-ExecutionPolicy RemoteSigned -Force"
+    Read-Host -Prompt "Press Enter once done..." 
+}
+}
+else {
+
+}
+
+
 Write-Host "Preparing to Install"
-Write-Host -ForegroundColor Yellow "Please open another powershell window as administrator and type the following command..."
-Write-Host -ForegroundColor Yellow "Set-ExecutionPolicy RemoteSigned -Force"
-Read-Host -Prompt "Press Enter once done..."
+
 Start-Sleep -Seconds 2
 
-
+ 
 
 
 New-Item -ItemType Directory -Force -Path "C:\BWApp"
