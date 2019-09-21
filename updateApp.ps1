@@ -43,6 +43,5 @@ Write-Host
 Write-Host -ForegroundColor Green "INSTALLATION COMPLETE.          "
 write-host 'Restarting App...'
 Exit-PSSession
-Exit
 $BWApp.Close()
 Exit
