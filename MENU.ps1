@@ -227,7 +227,7 @@ $ButtonEnableAuditLog.Font       = 'Microsoft Sans Serif,10'
 $ButtonEnableAuditLog.ForeColor  = "#7ed321"
 
 $LabelClickInstallPowershell     = New-Object system.Windows.Forms.Label
-$LabelClickInstallPowershell.text  = "Install Required Modules"
+$LabelClickInstallPowershell.text  = "Check for Updates"
 $LabelClickInstallPowershell.AutoSize  = $true
 $LabelClickInstallPowershell.width  = 25
 $LabelClickInstallPowershell.height  = 10
@@ -301,7 +301,7 @@ $ButtonBlockEmail.Add_Click({.\365BlockSender.ps1})
 $ButtonBlockDomain.Add_Click({.\365BlockDomain.ps1})
 $ButtonPrepareTenancy.Add_Click({.\prepareTenant.ps1})
 $ButtonEnableAuditLog.Add_Click({.\365EnableAuditLog.ps1})
-$LabelClickInstallPowershell.Add_Click({.\PreCheckModules.ps1})
+$LabelClickInstallPowershell.Add_Click({.\Install-BWApp.ps1})
 $LabelSignOutClose.Add_Click({.\SignOutClose.ps1;$BWApp.Close()})
 $LabelLogin.Add_Click({.\SwitchUser.ps1})
 $ButtonEnableOOF.Add_Click({.\365EnableOOF.ps1})
