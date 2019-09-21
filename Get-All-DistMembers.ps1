@@ -23,4 +23,4 @@ $Result | Export-CSV "$FilePath\All-Distribution-Group-Members.csv" -NoTypeInfor
 Write-Host -ForegroundColor Green "Saved to: $FilePath\All-Distribution-Group-Members.csv"
 Write-Host -ForegroundColor Green "Opening File..."
 Start-Sleep -Seconds 2
-Invoke-Item "$FilePath\Permission.csv"
+Invoke-Item "$FilePath\All-Distribution-Group-Members.csv"
