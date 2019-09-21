@@ -1,6 +1,6 @@
-$url = "https://github.com/valllem/BWApp/archive/master.zip"
+﻿$url = "https://github.com/valllem/BWApp/archive/master.zip"
 $Path = "C:\BWApp"
-$output = [IO.Path]::Combine($Path, "BWApp_$Version.zip”)
+$output = [IO.Path]::Combine($Path, "BWApp.zip”)
     
 Write-Host "Downloading BWApp Components" -ForegroundColor Yellow 
 (New-Object System.Net.WebClient).DownloadFile($url, $output)
@@ -9,7 +9,6 @@ Start-Sleep -Seconds 2
 write-host -foregroundcolor Yellow "Extracting..."
 Expand-Archive $output -DestinationPath $Path -Force
 Start-Sleep -Seconds 2    
-
 #Set the environment variable
 ##$Home = [IO.Path]::Combine($Path, "BWApp")
     
@@ -41,5 +40,5 @@ Write-Host
 Write-Host
 Write-Host
 Write-Host
-Write-Host -ForegroundColor Green "INSTALLATION COMPLETE.          "
-write-host 'Please Restart App...'
+Write-Host -ForegroundColor Green "                  INSTALLATION COMPLETE.          "
+Write-Host 'Please Restart App...'
