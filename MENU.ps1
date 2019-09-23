@@ -267,6 +267,13 @@ $ButtonAllPerms.height           = 30
 $ButtonAllPerms.location         = New-Object System.Drawing.Point(148,236)
 $ButtonAllPerms.Font             = 'Microsoft Sans Serif,10'
 
+$ButtonAllForwards                  = New-Object system.Windows.Forms.Button
+$ButtonAllForwards.text             = "All Mail Forwarding"
+$ButtonAllForwards.width            = 140
+$ButtonAllForwards.height           = 30
+$ButtonAllForwards.location         = New-Object System.Drawing.Point(290,236)
+$ButtonAllForwards.Font             = 'Microsoft Sans Serif,10'
+
 $ButtonEnableOOF                 = New-Object system.Windows.Forms.Button
 $ButtonEnableOOF.text            = "Enable OOF"
 $ButtonEnableOOF.width           = 121
@@ -281,7 +288,7 @@ $ButtonDisableOOF.height         = 30
 $ButtonDisableOOF.location       = New-Object System.Drawing.Point(154,281)
 $ButtonDisableOOF.Font           = 'Microsoft Sans Serif,10'
 
-$BWApp.controls.AddRange(@($LabelCalendar,$ButtonCalendarAccess1,$ButtonGiveAccessAll,$ButtonRemoveAccess,$ButtonCheckAccess,$LabelMailboxes,$ButtonFullAccess1,$ButtonRemoveFull,$ButtonSendAs,$ButtonForward,$ButtonFullAll,$ButtonRemoveAll,$ButtonCheckLogs,$LabelUsers,$ButtonRenameUPN,$ButtonRenameUser,$ButtonDisableUser,$ButtonEnableUser,$LabelSecurity,$ButtonBlockEmail,$ButtonBlockDomain,$ButtonPrepareTenancy,$ButtonEnableAuditLog,$LabelClickInstallPowershell,$LabelLogin,$LabelSignOutClose,$ButtonEnableOOF,$ButtonDisableOOF,$ButtonAllDistMembers,$ButtonAllPerms))
+$BWApp.controls.AddRange(@($LabelCalendar,$ButtonCalendarAccess1,$ButtonGiveAccessAll,$ButtonRemoveAccess,$ButtonCheckAccess,$LabelMailboxes,$ButtonFullAccess1,$ButtonRemoveFull,$ButtonSendAs,$ButtonForward,$ButtonFullAll,$ButtonRemoveAll,$ButtonCheckLogs,$LabelUsers,$ButtonRenameUPN,$ButtonRenameUser,$ButtonDisableUser,$ButtonEnableUser,$LabelSecurity,$ButtonBlockEmail,$ButtonBlockDomain,$ButtonPrepareTenancy,$ButtonEnableAuditLog,$LabelClickInstallPowershell,$LabelLogin,$LabelSignOutClose,$ButtonEnableOOF,$ButtonDisableOOF,$ButtonAllDistMembers,$ButtonAllPerms,$ButtonAllForwards))
 
 $ButtonFullAccess1.Add_Click({.\MailboxGrantFull.ps1})
 $ButtonRemoveFull.Add_Click({.\MailboxRemoveFull.ps1})
@@ -309,5 +316,6 @@ $ButtonEnableOOF.Add_Click({.\365EnableOOF.ps1})
 $ButtonDisableOOF.Add_Click({.\365DisableOOF.ps1})
 $ButtonAllDistMembers.Add_Click({.\Get-All-DistMembers.ps1})
 $ButtonAllPerms.Add_Click({.\Get-All-Perms.ps1})
+$ButtonAllForwards.Add_Click({.\AllForwards.ps1})
 
 $result = $BWApp.ShowDialog()
