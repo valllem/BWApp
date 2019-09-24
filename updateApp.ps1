@@ -45,3 +45,5 @@ Start-Sleep -Seconds 2
 
 Write-Progress -Activity "Updating BWApp" -Status "FINISHED UPDATE" -PercentComplete 100
 Start-Sleep -Seconds 1 
+Write-Host -ForegroundColor Yellow "You may need to restart the App for changes to take effect..."
+Write-Host -ForegroundColor Green "READY:"
