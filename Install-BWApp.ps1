@@ -1,4 +1,14 @@
-﻿
+﻿If ((Get-ExecutionPolicy) -ne "RemoteSigned") {    
+    If ((Get-ExecutionPolicy) -ne "Unrestricted") {   
+    Write-Host  "Please open another powershell window as administrator and type the following command..."
+    Write-Host -ForegroundColor red "Set-ExecutionPolicy RemoteSigned -Force"
+    Write-Host -ForegroundColor Green "If you have already done this, press Enter to begin installation"
+    Read-Host -Prompt "Press Enter once done..."
+}
+}
+else {
+
+}
 
 if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')) {
  if ([int](Get-CimInstance -Class Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber) -ge 6000) {
@@ -10,20 +20,11 @@ if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 }
 
 
-If ((Get-ExecutionPolicy) -ne "RemoteSigned") {    
-    If ((Get-ExecutionPolicy) -ne "Unrestricted") {   
-    Write-Host -ForegroundColor Yellow "Please open another powershell window as administrator and type the following command..."
-    Write-Host -ForegroundColor Yellow "Set-ExecutionPolicy RemoteSigned -Force"
-    Read-Host -Prompt "Press Enter once done..." 
-}
-}
-else {
-
-}
 
 
-Write-Host "Preparing to Install"
 
+
+Write-Progress -Activity "Installing BWAPP" -Status "Getting Ready" -PercentComplete 1
 Start-Sleep -Seconds 2
 
  
@@ -34,111 +35,93 @@ $url = "https://github.com/valllem/BWApp/archive/master.zip"
 $Path = "C:\BWApp"
 $output = [IO.Path]::Combine($Path, "BWApp_$Version.zip”)
     
-Write-Host "Downloading BWApp Components" -ForegroundColor Yellow 
 
 
-Write-Host -ForegroundColor Yellow 'CHECKING AND INSTALLING REQUIRED MODULES'
-Write-Host -ForegroundColor Yellow '========================================='
+Write-Progress -Activity "Installing BWAPP" -Status "Checking Required Modules" -PercentComplete 5
+
                                                            
 
-Write-Host -ForegroundColor Yellow 'Checking if required Modules are installed.'
+
 Install-PackageProvider -Name NuGet -Force
 ##--Security Principal Check for If statement--##
 $currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
 
-
+Clear-Host
 If ($currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)){
     
 if (Get-Module -ListAvailable -Name AADRM) {
-    Write-Host -ForegroundColor Green "Azure AD Right Management Module exists"
+    
+    
 } 
 else {
-    Write-Host -foregroundcolor Yellow "Module does not exist..."
-    write-host -foregroundcolor Yellow "Installing Azure AD Right Management module"
+    Clear-Host
     Install-Module -Name AADRM -force
 }
-
+Write-Progress -Activity "Installing BWAPP" -Status "Installing Required Modules - This can take several minutes" -PercentComplete 8
 if (Get-Module -ListAvailable -Name AzureAD) {
-    Write-Host -ForegroundColor Green "Azure AD Module exists"
+    
+
 } 
 else {
-    Write-Host -foregroundcolor Yellow "Module does not exist..."
-    write-host -foregroundcolor Yellow "Installing Azure AD module"
+    Clear-Host
     Install-Module -Name AzureAD -force
 }
-  
+Write-Progress -Activity "Installing BWAPP" -Status "Installing Required Modules - This can take several minutes" -PercentComplete 10  
 if (Get-Module -ListAvailable -Name MicrosoftTeams) {
-    Write-Host -ForegroundColor Green "Teams Module exists"
+    
 } 
 else {
-    Write-Host -foregroundcolor Yellow "Module does not exist..."
-    write-host -foregroundcolor Yellow "Installing Teams Module"
+    Clear-Host
     Install-Module -Name MicrosoftTeams -Force
 }
-
+Write-Progress -Activity "Installing BWAPP" -Status "Installing Required Modules - This can take several minutes" -PercentComplete 15
 if (Get-Module -ListAvailable -Name Microsoft.Online.SharePoint.PowerShell) {
-    Write-Host -ForegroundColor Green "SharePoint Online Module exists"
+    
 } 
 else {
-    Write-Host -foregroundcolor Yellow "Module does not exist..."
-    write-host -foregroundcolor Yellow "Installing SharePoint Online module"
+    Clear-Host
     Install-Module -Name Microsoft.Online.SharePoint.PowerShell -force
 }
-    
+Write-Progress -Activity "Installing BWAPP" -Status "Installing Required Modules - This can take several minutes" -PercentComplete 20    
 if (Get-Module -ListAvailable -Name MSOnline) {
-    Write-Host -ForegroundColor Green "Microsoft Online Module exists"
+    
 } 
 else {
-    Write-Host -foregroundcolor Yellow "Module does not exist..."
-    write-host -foregroundcolor Yellow "Installing Microsoft Online module"
+    Clear-Host
     Install-Module -Name MSOnline -force
 }
-
+Write-Progress -Activity "Installing BWAPP" -Status "Installing Required Modules - This can take several minutes" -PercentComplete 25
 if (Get-Module -ListAvailable -Name AzureRM) {
-    Write-Host -ForegroundColor Green "Azure Module exists"
+    
 } 
 else {
-    Write-Host -foregroundcolor Yellow "Module does not exist..."
-    write-host -foregroundcolor Yellow "Installing Azure module... This may take a few minutes"
+    Clear-Host
     Install-Module -name AzureRM -Force
 }    
-
+Write-Progress -Activity "Installing BWAPP" -Status "Installing Required Modules - This can take several minutes" -PercentComplete 30
 if (Get-Module -ListAvailable -Name CreateExoPsSession) {
-    Write-Host -ForegroundColor Green "Exchange PS Module exists"
+    
 } 
 else {
-    Write-Host -foregroundcolor Yellow "Module does not exist..."
-    write-host -foregroundcolor Yellow "Installing Exchange PS module"
+    Clear-Host
     Install-Script -Name CreateExoPsSession -force 
 }
+Write-Progress -Activity "Installing BWAPP" -Status "Installing Required Modules - This can take several minutes" -PercentComplete 35
 
-
-    write-host -foregroundcolor Yellow "Installing latest Exchange Management module..."
+    
     Install-Module -Name Microsoft.Exchange.Management.ExoPowershellModule -Force -AllowClobber
-
-
-
-    write-host -foregroundcolor Yellow "Installing latest Exchange MFA module"
     Install-Script -Name Load-ExchangeMFA -Force 
     Install-Module -Name ExchangeOnlineShell -Force
-
     winrm qc -transport:https -Force
-    
+    Clear-Host
 
 }
-
-
+Write-Progress -Activity "Installing BWAPP" -Status "Installed Required Modules" -PercentComplete 40
 else {
     write-host -foregroundcolor $errormessagecolor "*** ERROR *** - Please re-run PowerShell environment as Administrator`n"
 }
-
-write-host -foregroundcolor Green "All Modules Installed"
-
-
-write-host -foregroundcolor Yellow "Downloading required components..."
-Start-Sleep -Seconds 2
-
-
+Clear-Host
+Write-Progress -Activity "Installing BWAPP" -Status "Importing needed scripts" -PercentComplete 41
 function Install-ClickOnce {
 [CmdletBinding()] 
 Param(
@@ -201,8 +184,8 @@ Param(
         Get-EventSubscriber|? {$_.SourceObject.ToString() -eq 'System.Deployment.Application.InPlaceHostingManager'} | Unregister-Event
     }
 }
-
-
+Clear-Host
+Write-Progress -Activity "Installing BWAPP" -Status "Importing needed scripts" -PercentComplete 60
 <# Simple Install Check
 #>
 function Get-ClickOnce {
@@ -213,8 +196,8 @@ Param(
     $InstalledApplicationNotMSI = Get-ChildItem HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall | foreach-object {Get-ItemProperty $_.PsPath}
     return $InstalledApplicationNotMSI | ? { $_.displayname -match $ApplicationName } | Select-Object -First 1
 }
-
-
+Clear-Host
+Write-Progress -Activity "Installing BWAPP" -Status "Testing Scripts" -PercentComplete 65
 Function Test-ClickOnce {
 [CmdletBinding()] 
 Param(
@@ -222,8 +205,8 @@ Param(
 )
     return ( (Get-ClickOnce -ApplicationName $ApplicationName) -ne $null) 
 }
-
-
+Clear-Host
+Write-Progress -Activity "Installing BWAPP" -Status "Creating UnInstall" -PercentComplete 70
 <# Simple UnInstall
 #>
 function Uninstall-ClickOnce {
@@ -257,7 +240,8 @@ Param(
         #return $null
     }
 }
-
+Clear-Host
+Write-Progress -Activity "Installing BWAPP" -Status "Loading Exchange MFA Module" -PercentComplete 75
 Function Load-ExchangeMFAModule { 
 [CmdletBinding()] 
 Param ()
@@ -300,8 +284,8 @@ Param ()
         }
     }
 }
-
-
+Clear-Host
+Write-Progress -Activity "Installing BWAPP" -Status "Preparing ClickOnce Script" -PercentComplete 80
 if ((Test-ClickOnce -ApplicationName "Microsoft Exchange Online Powershell Module" ) -eq $false)  {
    Install-ClickOnce -Manifest "https://cmdletpswmodule.blob.core.windows.net/exopsmodule/Microsoft.Online.CSE.PSModule.Client.application"
 }
@@ -309,25 +293,22 @@ if ((Test-ClickOnce -ApplicationName "Microsoft Exchange Online Powershell Modul
 $script = Load-ExchangeMFAModule -Verbose
 #Dot Source the associated script
 . $Script
-
-
-
-
-
+Clear-Host
+Write-Progress -Activity "Installing BWAPP" -Status "Downloading Components" -PercentComplete 90
     
 #Download file
 (New-Object System.Net.WebClient).DownloadFile($url, $output)
 Start-Sleep -Seconds 2    
 # Unzip the Archive
-write-host -foregroundcolor Yellow "Extracting..."
+Write-Progress -Activity "Installing BWAPP" -Status "Extracting Components" -PercentComplete 95
 Expand-Archive $output -DestinationPath $Path -Force
-Start-Sleep -Seconds 2    
+    
 #Set the environment variable
 ##$Home = [IO.Path]::Combine($Path, "BWApp")
-    
+Clear-Host    
 ##[Environment]::SetEnvironmentVariable("HOME", "$Home", "User")
-
-Start-Sleep -Seconds 2
+Write-Progress -Activity "Installing BWAPP" -Status "Creating Shortcuts" -PercentComplete 99
+Start-Sleep -Seconds 4
 write-host -foregroundcolor Yellow "Creating Shortcuts"
 cd $HOME
 cd desktop
@@ -353,8 +334,8 @@ Write-Host
 Write-Host
 Write-Host
 Write-Host
-Write-Host -ForegroundColor Green "                  INSTALLATION COMPLETE.          "
+Write-Host -ForegroundColor Green "  INSTALLATION COMPLETE.          "
 Write-Host
 Write-Host
 Write-Host
-read-host -Prompt '               Press Enter to Close Installer'
+read-host -Prompt '  Press Enter to Close Installer'
