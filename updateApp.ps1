@@ -1,26 +1,33 @@
 ﻿$url = "https://github.com/valllem/BWApp/archive/master.zip"
 $Path = "C:\BWApp"
 $output = [IO.Path]::Combine($Path, "BWApp.zip”)
-    
-Write-Host "Downloading BWApp Components" -ForegroundColor Yellow 
-(New-Object System.Net.WebClient).DownloadFile($url, $output)
-Start-Sleep -Seconds 2    
-# Unzip the Archive
-write-host -foregroundcolor Yellow "Extracting..."
-Expand-Archive $output -DestinationPath $Path -Force
-Start-Sleep -Seconds 2    
-#Set the environment variable
-##$Home = [IO.Path]::Combine($Path, "BWApp")
-    
-##[Environment]::SetEnvironmentVariable("HOME", "$Home", "User")
 
-Start-Sleep -Seconds 2
-write-host -foregroundcolor Yellow "Creating Shortcuts"
+Write-Progress -Activity "Updating BWApp" -Status "Getting Ready" -PercentComplete 15    
+
+Write-Progress -Activity "Updating BWApp" -Status "Downloading Components" -PercentComplete 30
+(New-Object System.Net.WebClient).DownloadFile($url, $output)
+Clear-Host
+Start-Sleep -Seconds 2    
+
+Write-Progress -Activity "Updating BWApp" -Status "Extracting..." -PercentComplete 45
+Clear-Host
+Start-Sleep -Seconds 2  
+# Unzip the Archive
+Expand-Archive $output -DestinationPath $Path -Force
+Clear-Host
+Write-Progress -Activity "Updating BWApp" -Status "Tidying Up" -PercentComplete 60
+## I need to add the tidy up script here.
+Clear-Host
+Start-Sleep -Seconds 2     
+
+Write-Progress -Activity "Updating BWApp" -Status "Updating shortcuts..." -PercentComplete 75
+Start-Sleep -Seconds 2 
 cd $HOME
 cd desktop
 $ShortCutDir = Get-Location
-write-host $ShortCutDir
+Clear-Host
 Start-Sleep -Seconds 2
+
 function set-shortcut {
 param ( [string]$SourceLnk, [string]$DestinationPath )
     $WshShell = New-Object -comObject WScript.Shell
@@ -29,16 +36,12 @@ param ( [string]$SourceLnk, [string]$DestinationPath )
     $Shortcut.Save()
     }
 set-shortcut "$ShortcutDir\BWApp.lnk" "$Path\BWApp-master\Launcher.ps1"
-Start-Sleep -Seconds 2
 Clear-Host
+Start-Sleep -Seconds 2
 cd "C:\BWApp\BWApp-master"
+Write-Progress -Activity "Updating BWApp" -Status "Finishing Update..." -PercentComplete 90
+Clear-Host
+Start-Sleep -Seconds 2 
 
-Write-Host
-Write-Host
-Write-Host
-Write-Host
-Write-Host
-Write-Host
-Write-Host
-Write-Host -ForegroundColor Green "                  INSTALLATION COMPLETE.          "
-Write-Host 'Please Restart App...'
+Write-Progress -Activity "Updating BWApp" -Status "FINISHED UPDATE" -PercentComplete 100
+Start-Sleep -Seconds 1 
