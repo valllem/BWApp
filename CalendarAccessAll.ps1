@@ -54,7 +54,7 @@ $ListBox3                        = New-Object system.Windows.Forms.ListBox
 $ListBox3.text                   = "listBox"
 $ListBox3.width                  = 175
 $ListBox3.height                 = 260
-@("PublishingAuthor","LimitedDetails") | ForEach-Object {[void] $ListBox3.Items.Add($_)}
+@("Owner","PublishingAuthor","LimitedDetails") | ForEach-Object {[void] $ListBox3.Items.Add($_)}
 $ListBox3.location               = New-Object System.Drawing.Point(360,77)
 
 $permission                      = New-Object system.Windows.Forms.Label
