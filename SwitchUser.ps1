@@ -1,6 +1,11 @@
 ﻿Clear-host 
 write-host -ForegroundColor Yellow 'Signing Out'
-Disconnect-PSSession $EXOSession
+try {
+Disconnect-PSSession $EXOSession\
+}
+catch {
+
+}
 Exit-PSSession
 Write-Host -ForegroundColor Yellow "Signed Out, Switching User"
 Start-Sleep -Seconds 1
