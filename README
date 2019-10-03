@@ -2,22 +2,19 @@ INSTALLING
 ==================================
 
 Download the file "Install-BWApp"
-Put the file in a location you want to run the app from E.g. C:\BWApp
 Right click the file and choose, "Run with Powershell"
 
-This will download the remaining files it needs from Github as a .zip file, and automatically extract them to your current path.
-E.g. C:\BWApp\BWApp-Master
-
+This will download the remaining files it needs as a .zip file, and automatically extract them to C:\BWApp\BWApp-Master
+Provided you have a standard desktop location (E.g. C:\users\<yourname>\desktop ) a shortcut will be placed on your desktop.
 All the required files are now present.
 
 
 RUNNING THE APP
 ==========================
-Open powershell with eleveate privelages (Right click powershell and choose "Run as Administrator")
+Right click the shortcut on the desktop labelled BWApp and run with powershell.
 
-Browse to C:\BWApp\BWApp-Master\ using command:
-cd "C:\BWApp\BWApp-Master"
-tye MENU and press tab to autocomplete. You should see it change to ".\MENU.ps1" - Press ENTER
 
-The script will now launch - sign in as the Global Administrator of the Tenancy you want to manage.
+
+
+NOTE: If the shortcut is not present go to "C:\BWApp\BWApp-master" and run the file called "Launcher.ps1" with powershell.
 
