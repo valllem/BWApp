@@ -141,6 +141,34 @@ foreach ($mailbox in $mailboxes) {
         Write-Host "Permission level already exists for $($x.displayname) on $($mailbox.displayname)'s calendar" -foregroundColor Green
     }
 }
+} elseif ($z -eq "Owner") {
+    $mailboxes = Get-mailbox
+    $userRequiringAccess = Get-mailbox $userRequiringAccess
+foreach ($mailbox in $mailboxes) {
+    $accessRights = $null
+    $accessRights = Get-MailboxFolderPermission "$($mailbox.primarysmtpaddress):\calendar" -User $x.PrimarySmtpAddress -erroraction SilentlyContinue
+    Remove-MailboxFolderPermission "$($mailbox.primarysmtpaddress):\calendar" -User "$x" -Confirm:$false -ErrorAction SilentlyContinue
+    Write-Host "Updating permissions for $($mailbox.primarysmtpaddress) Calendar" -ForegroundColor Green
+    if ($accessRights.accessRights -notmatch $z -and $mailbox.primarysmtpaddress -notcontains $x.primarysmtpaddress -and $mailbox.primarysmtpaddress -notmatch "DiscoverySearchMailbox") {
+        Write-Host "Adding or updating permissions for $($mailbox.primarysmtpaddress) Calendar" -ForegroundColor Yellow
+        try {
+            Add-MailboxFolderPermission "$($mailbox.primarysmtpaddress):\calendar" -User $x -AccessRights $z -ErrorAction SilentlyContinue    
+        }
+        catch {
+            Set-MailboxFolderPermission "$($mailbox.primarysmtpaddress):\calendar" -User $x -AccessRights $z -ErrorAction SilentlyContinue    
+        }        
+        $accessRights = Get-MailboxFolderPermission "$($mailbox.primarysmtpaddress):\calendar" -User $x.PrimarySmtpAddress
+        if ($accessRights.accessRights -match $z) {
+            Write-Host "Successfully added $z permissions on $($mailbox.displayname)'s calendar for $($x.displayname)" -ForegroundColor Green
+        }
+        else {
+            Write-Host "Could not add $z permissions on $($mailbox.displayname)'s calendar for $($x.displayname)" -ForegroundColor Red
+        }
+    }else{
+        Write-Host "Permission level already exists for $($x.displayname) on $($mailbox.displayname)'s calendar" -foregroundColor Green
+    }
+}
+
 } else {
 write-host 'An error occurred'
 }
