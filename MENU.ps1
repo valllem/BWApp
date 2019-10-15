@@ -54,7 +54,7 @@ Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
 $BWApp                           = New-Object system.Windows.Forms.Form
-$BWApp.ClientSize                = '487,722'
+$BWApp.ClientSize                = '530,722'
 $BWApp.text                      = "BWApp - Main Menu"
 $BWApp.TopMost                   = $false
 
@@ -305,7 +305,16 @@ $CheckMailboxPerms.height        = 30
 $CheckMailboxPerms.location      = New-Object System.Drawing.Point(328,208)
 $CheckMailboxPerms.Font          = 'Microsoft Sans Serif,10'
 
-$BWApp.controls.AddRange(@($ButtonCalendarAccess1,$ButtonGiveAccessAll,$ButtonRemoveAccess,$ButtonCheckAccess,$ButtonFullAccess1,$ButtonRemoveFull,$ButtonSendAs,$ButtonForward,$ButtonFullAll,$ButtonRemoveAll,$ButtonCheckLogs,$ButtonRenameUPN,$ButtonRenameUser,$ButtonDisableUser,$ButtonEnableUser,$ButtonBlockEmail,$ButtonBlockDomain,$ButtonPrepareTenancy,$ButtonEnableAuditLog,$LabelClickInstallPowershell,$LabelLogin,$LabelSignOutClose,$ButtonAllDistMembers,$ButtonAllPerms,$ButtonEnableOOF,$ButtonDisableOOF,$GroupBoxMenu,$ButtonAllForwards,$GroupboxMailBox,$GroupboxCalendar,$GroupboxUsers,$GroupboxSecurity,$CheckMailboxPerms))
+$LabelCustomCommand              = New-Object system.Windows.Forms.Label
+$LabelCustomCommand.text         = "Run Custom Command"
+$LabelCustomCommand.AutoSize     = $true
+$LabelCustomCommand.width        = 25
+$LabelCustomCommand.height       = 10
+$LabelCustomCommand.location     = New-Object System.Drawing.Point(304,696)
+$LabelCustomCommand.Font         = 'Microsoft Sans Serif,10,style=Bold'
+$LabelCustomCommand.ForeColor    = "#9013fe"
+
+$BWApp.controls.AddRange(@($ButtonCalendarAccess1,$ButtonGiveAccessAll,$ButtonRemoveAccess,$ButtonCheckAccess,$ButtonFullAccess1,$ButtonRemoveFull,$ButtonSendAs,$ButtonForward,$ButtonFullAll,$ButtonRemoveAll,$ButtonCheckLogs,$ButtonRenameUPN,$ButtonRenameUser,$ButtonDisableUser,$ButtonEnableUser,$ButtonBlockEmail,$ButtonBlockDomain,$ButtonPrepareTenancy,$ButtonEnableAuditLog,$LabelClickInstallPowershell,$LabelLogin,$LabelSignOutClose,$ButtonAllDistMembers,$ButtonAllPerms,$ButtonEnableOOF,$ButtonDisableOOF,$GroupBoxMenu,$ButtonAllForwards,$GroupboxMailBox,$GroupboxCalendar,$GroupboxUsers,$GroupboxSecurity,$CheckMailboxPerms,$LabelCustomCommand))
 
 $ButtonFullAccess1.Add_Click({.\MailboxGrantFull.ps1})
 $ButtonRemoveFull.Add_Click({.\MailboxRemoveFull.ps1})
@@ -335,5 +344,6 @@ $ButtonAllDistMembers.Add_Click({.\Get-All-DistMembers.ps1})
 $ButtonAllPerms.Add_Click({.\Get-All-Perms.ps1})
 $ButtonAllForwards.Add_Click({.\AllForwards.ps1})
 $CheckMailboxPerms.Add_Click({.\MailboxCheck.ps1})
+$LabelCustomCommand.Add_Click({.\CustomCommand.ps1})
 
 $result = $BWApp.ShowDialog()
