@@ -298,7 +298,14 @@ $GroupboxSecurity.width          = 172
 $GroupboxSecurity.text           = "Security"
 $GroupboxSecurity.location       = New-Object System.Drawing.Point(9,499)
 
-$BWApp.controls.AddRange(@($ButtonCalendarAccess1,$ButtonGiveAccessAll,$ButtonRemoveAccess,$ButtonCheckAccess,$ButtonFullAccess1,$ButtonRemoveFull,$ButtonSendAs,$ButtonForward,$ButtonFullAll,$ButtonRemoveAll,$ButtonCheckLogs,$ButtonRenameUPN,$ButtonRenameUser,$ButtonDisableUser,$ButtonEnableUser,$ButtonBlockEmail,$ButtonBlockDomain,$ButtonPrepareTenancy,$ButtonEnableAuditLog,$LabelClickInstallPowershell,$LabelLogin,$LabelSignOutClose,$ButtonAllDistMembers,$ButtonAllPerms,$ButtonEnableOOF,$ButtonDisableOOF,$GroupBoxMenu,$ButtonAllForwards,$GroupboxMailBox,$GroupboxCalendar,$GroupboxUsers,$GroupboxSecurity))
+$CheckMailboxPerms               = New-Object system.Windows.Forms.Button
+$CheckMailboxPerms.text          = "Check Mailbox Perms"
+$CheckMailboxPerms.width         = 138
+$CheckMailboxPerms.height        = 30
+$CheckMailboxPerms.location      = New-Object System.Drawing.Point(328,208)
+$CheckMailboxPerms.Font          = 'Microsoft Sans Serif,10'
+
+$BWApp.controls.AddRange(@($ButtonCalendarAccess1,$ButtonGiveAccessAll,$ButtonRemoveAccess,$ButtonCheckAccess,$ButtonFullAccess1,$ButtonRemoveFull,$ButtonSendAs,$ButtonForward,$ButtonFullAll,$ButtonRemoveAll,$ButtonCheckLogs,$ButtonRenameUPN,$ButtonRenameUser,$ButtonDisableUser,$ButtonEnableUser,$ButtonBlockEmail,$ButtonBlockDomain,$ButtonPrepareTenancy,$ButtonEnableAuditLog,$LabelClickInstallPowershell,$LabelLogin,$LabelSignOutClose,$ButtonAllDistMembers,$ButtonAllPerms,$ButtonEnableOOF,$ButtonDisableOOF,$GroupBoxMenu,$ButtonAllForwards,$GroupboxMailBox,$GroupboxCalendar,$GroupboxUsers,$GroupboxSecurity,$CheckMailboxPerms))
 
 $ButtonFullAccess1.Add_Click({.\MailboxGrantFull.ps1})
 $ButtonRemoveFull.Add_Click({.\MailboxRemoveFull.ps1})
@@ -327,5 +334,6 @@ $ButtonDisableOOF.Add_Click({.\365DisableOOF.ps1})
 $ButtonAllDistMembers.Add_Click({.\Get-All-DistMembers.ps1})
 $ButtonAllPerms.Add_Click({.\Get-All-Perms.ps1})
 $ButtonAllForwards.Add_Click({.\AllForwards.ps1})
+$CheckMailboxPerms.Add_Click({.\MailboxCheck.ps1})
 
 $result = $BWApp.ShowDialog()
