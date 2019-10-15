@@ -70,7 +70,7 @@ $ListBox3                        = New-Object system.Windows.Forms.ListBox
 $ListBox3.text                   = "listBox"
 $ListBox3.width                  = 175
 $ListBox3.height                 = 260
-@('Limited Details','Author','Publishing Editor','Owner') | ForEach-Object {[void] $ListBox3.Items.Add($_)}
+@('AvailabilityOnly','Limited Details','Author','Publishing Editor','Owner') | ForEach-Object {[void] $ListBox3.Items.Add($_)}
 $ListBox3.location               = New-Object System.Drawing.Point(595,77)
 
 $permission                      = New-Object system.Windows.Forms.Label
@@ -100,16 +100,17 @@ if ($result -eq [System.Windows.Forms.DialogResult]::OK)
     $z = $ListBox3.SelectedItem
     
     
-Remove-MailboxFolderPermission $x':\calendar' -User "$y" -Confirm:$false -ErrorAction SilentlyContinue
+try {
 write-host 'Adding Permissions...'
 Add-MailboxFolderPermission $x':\calendar' -User "$y" -AccessRights $z -ErrorAction SilentlyContinue
+}
+catch {
 write-host 'UPDATING Permissions...'
-
-write-host -ForegroundColor Green 'Completed Tasks'
-Start-Sleep -Seconds 2
-exit
+Remove-MailboxFolderPermission $x':\calendar' -User "$y" -Confirm:$false -ErrorAction SilentlyContinue
+Add-MailboxFolderPermission $x':\calendar' -User "$y" -AccessRights $z -ErrorAction SilentlyContinue
 }
 
+write-host -ForegroundColor Green 'Completed Tasks'
 
-
-
+exit
+}

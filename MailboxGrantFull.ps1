@@ -107,15 +107,30 @@ if ($result -eq [System.Windows.Forms.DialogResult]::OK){
 
 write-host 'Removing any existing permissions in place for' $x
 if ($z -eq "Yes") {
-    Remove-MailboxPermission -Identity $x -User "$y" -AccessRights FullAccess -Confirm:$false -ErrorAction SilentlyContinue
+
+try {
     write-host 'Adding Permissions...'
     Add-MailboxPermission -Identity $x -User "$y" -AccessRights FullAccess -AutoMapping $true
-} elseif ($z -eq "No") {
+}
+catch {
     Remove-MailboxPermission -Identity $x -User "$y" -AccessRights FullAccess -Confirm:$false -ErrorAction SilentlyContinue
+    write-host 'Updating Permissions...'
+    Add-MailboxPermission -Identity $x -User "$y" -AccessRights FullAccess -AutoMapping $true
+}
+    
+    
+} elseif ($z -eq "No") {
+try {
     write-host 'Adding Permissions...'
     Add-MailboxPermission -Identity $x -User "$y" -AccessRights FullAccess -AutoMapping $false
+    }
+    catch {
+    write-host 'Updating Permissions...'
+    Remove-MailboxPermission -Identity $x -User "$y" -AccessRights FullAccess -Confirm:$false -ErrorAction SilentlyContinue
+    Add-MailboxPermission -Identity $x -User "$y" -AccessRights FullAccess -AutoMapping $false
+    }
 } else {
-write-host 'An error occurred'
+write-host 'An error occurred. Code: MailboxGrantFull[103-134]'
 }
 
 write-host -ForegroundColor Green 'Completed Tasks'
