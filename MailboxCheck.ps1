@@ -3,6 +3,7 @@ write-host '====================='
 $colourAlert = "Yellow"
 $colourInfo = "Green"
 
+$FilePath = "C:\BWApp\Logs"
 
 Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()
@@ -65,10 +66,10 @@ if ($result -eq [System.Windows.Forms.DialogResult]::OK){
     $x = $ListBox1.SelectedItem
     $y = $mailbox.PrimarySmtpAddress
  
-$result = Get-MailboxPermission -identity $x | out-gridview
-$results | out-gridview
-$results | Export-Csv $FilePath\MessageTrace.csv
-
+$results = Get-MailboxPermission -identity $x
+$results | Where-Object { ($_.accessRights -like "*") -and -not ($_.User -like "NT AUTHORITY\SELF") -and -not ($_.User -like "*\Domain Admins")-and -not ($_.User -like "*\Organisations-Admins") -and -not ($_.User -like "*\Organization Management") -and -not ($_.User -like "*\Administrator") -and -not ($_.User -like "*\Exchange Servers") -and -not ($_.User -like "*\Exchange Trusted Subsystem") -and -not ($_.User -like "*\Enterprise Admins") -and -not ($_.User -like "*\system")} | out-gridview
+$results | Where-Object { ($_.accessRights -like "*") -and -not ($_.User -like "NT AUTHORITY\SELF") -and -not ($_.User -like "*\Domain Admins")-and -not ($_.User -like "*\Organisations-Admins") -and -not ($_.User -like "*\Organization Management") -and -not ($_.User -like "*\Administrator") -and -not ($_.User -like "*\Exchange Servers") -and -not ($_.User -like "*\Exchange Trusted Subsystem") -and -not ($_.User -like "*\Enterprise Admins") -and -not ($_.User -like "*\system")} | Export-Csv "$FilePath\MailboxPerms.csv"
+Invoke-Item "$FilePath\MailboxPerms.csv"
 write-host -ForegroundColor Green "Completed all Tasks"
 
 

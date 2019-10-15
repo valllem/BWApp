@@ -300,7 +300,7 @@ $GroupboxSecurity.location       = New-Object System.Drawing.Point(9,499)
 
 $CheckMailboxPerms               = New-Object system.Windows.Forms.Button
 $CheckMailboxPerms.text          = "Check Mailbox Perms"
-$CheckMailboxPerms.width         = 138
+$CheckMailboxPerms.width         = 196
 $CheckMailboxPerms.height        = 30
 $CheckMailboxPerms.location      = New-Object System.Drawing.Point(328,208)
 $CheckMailboxPerms.Font          = 'Microsoft Sans Serif,10'
