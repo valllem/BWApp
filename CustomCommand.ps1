@@ -8,7 +8,7 @@ $Form.TopMost                    = $false
 
 $TextBoxCommand                  = New-Object system.Windows.Forms.TextBox
 $TextBoxCommand.multiline        = $false
-$TextBoxCommand.text             = "E.g. Get-Mailbox"
+$TextBoxCommand.text             = "Get-User"
 $TextBoxCommand.width            = 495
 $TextBoxCommand.height           = 20
 $TextBoxCommand.location         = New-Object System.Drawing.Point(20,54)
@@ -44,7 +44,8 @@ $result = $Form.ShowDialog()
 if ($result -eq [System.Windows.Forms.DialogResult]::OK){
     $x = $TextBoxCommand.Text
     
-Invoke-Expression $x
+$custom = Invoke-Expression $x | Export-Csv "C:\BWApp\Logs\Custom.csv"
+Invoke-Item "C:\BWApp\Logs\Custom.csv"
 
 write-host -ForegroundColor Green "Completed all Tasks"
 
