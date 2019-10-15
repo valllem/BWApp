@@ -65,7 +65,9 @@ if ($result -eq [System.Windows.Forms.DialogResult]::OK){
     $x = $ListBox1.SelectedItem
     $y = $mailbox.PrimarySmtpAddress
  
-Get-MailboxFolderPermission -identity $x | out-gridview
+$result = Get-MailboxFolderPermission -identity $x | out-gridview
+$results | out-gridview
+$results | Export-Csv $FilePath\MessageTrace.csv
 
 write-host -ForegroundColor Green "Completed all Tasks"
 
