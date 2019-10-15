@@ -42,7 +42,7 @@ $Form.CancelButton = $Button2
 $Form.Controls.Add($Button2)
 
 $Identity                        = New-Object system.Windows.Forms.Label
-$Identity.text                   = "Calendar to Check"
+$Identity.text                   = "Mailbox to Check"
 $Identity.AutoSize               = $true
 $Identity.width                  = 25
 $Identity.height                 = 10
@@ -65,7 +65,7 @@ if ($result -eq [System.Windows.Forms.DialogResult]::OK){
     $x = $ListBox1.SelectedItem
     $y = $mailbox.PrimarySmtpAddress
  
-$result = Get-MailboxFolderPermission -identity $x | out-gridview
+$result = Get-MailboxPermission -identity $x | out-gridview
 $results | out-gridview
 $results | Export-Csv $FilePath\MessageTrace.csv
 
