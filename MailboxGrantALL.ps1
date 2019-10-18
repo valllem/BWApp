@@ -1,21 +1,9 @@
-﻿## Why are you in here? Please speak with Dale if you have any errors ##
-
-write-Host -ForegroundColor Yellow '======================================='
-write-Host -ForegroundColor Yellow '    GRANT USER ALL MAILBOX ACCESS     '
-write-Host -ForegroundColor Yellow '======================================='
-write-Host -ForegroundColor Yellow ' '
-
-
-Add-Type -AssemblyName System.Windows.Forms
+﻿Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
-try {
-$mailboxes = Get-Mailbox |Select-Object PrimarySmtpAddress
-}
+$logfile = "C:\BWApp\Logs\Log.txt"
 
-catch {
-write-host -ForegroundColor Red "NOT LOGGED IN. Please select 'switch account' on the main menu "
-}
+$mailboxes = Get-Mailbox |Select-Object PrimarySmtpAddress
 
 $calendarAccess1                 = New-Object system.Windows.Forms.Form
 $calendarAccess1.ClientSize      = '500,420'
@@ -89,28 +77,114 @@ if ($result -eq [System.Windows.Forms.DialogResult]::OK){
     $x = $ListBox1.SelectedItem
     $y = $mailbox.PrimarySmtpAddress
     $z = $ListBox3.SelectedItem
-    
+   
+    ## -- Create The Progress-Bar
+	$ObjForm = New-Object System.Windows.Forms.Form
+	$ObjForm.Text = "Running Task"
+	$ObjForm.Height = 100
+	$ObjForm.Width = 500
+	$ObjForm.BackColor = "White"
 
-$accessRight = "FullAccess"
-$mailboxes = Get-mailbox
+	$ObjForm.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedSingle
+	$ObjForm.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
+
+	## -- Create The Label
+	$ObjLabel = New-Object System.Windows.Forms.Label
+	$ObjLabel.Text = "Starting Task. Please wait ... "
+	$ObjLabel.Left = 5
+	$ObjLabel.Top = 10
+	$ObjLabel.Width = 500 - 20
+	$ObjLabel.Height = 15
+	$ObjLabel.Font = "Tahoma"
+	## -- Add the label to the Form
+	$ObjForm.Controls.Add($ObjLabel)
+
+	$PB = New-Object System.Windows.Forms.ProgressBar
+	$PB.Name = "PowerShellProgressBar"
+	$PB.Value = 10
+	$PB.Style="Continuous"
+
+	$System_Drawing_Size = New-Object System.Drawing.Size
+	$System_Drawing_Size.Width = 500 - 40
+	$System_Drawing_Size.Height = 20
+	$PB.Size = $System_Drawing_Size
+	$PB.Left = 5
+	$PB.Top = 40
+	$ObjForm.Controls.Add($PB)
+
+	## -- Show the Progress-Bar and Start The PowerShell Script
+	$ObjForm.Show() | Out-Null
+	$ObjForm.Focus() | Out-NUll
+	$ObjLabel.Text = "Preparing Script. Please wait ... "
+	$ObjForm.Refresh()
+
+	Start-Sleep -Milliseconds 300
+#####
+    $ObjForm.Refresh()
+    $PB.Value = $Percentage
+	$ObjLabel.Text = "Configuring Permissions..."
+	Start-Sleep -Milliseconds 300 
+
+    $accessRight = "FullAccess"
+    $mailboxes = Get-mailbox
+    $Counter = 0
 foreach ($mailbox in $mailboxes) {
     $accessRights = $null
     $accessRights = Get-MailboxPermission "$($mailbox.primarysmtpaddress)" -User $userRequiringAccess.PrimarySmtpAddress -erroraction SilentlyContinue
-         
-if ($z -eq "Yes") {
-    Remove-MailboxPermission -Identity $y -User "$x" -AccessRights FullAccess -Confirm:$false -ErrorAction SilentlyContinue
-    write-host "Adding $x Permissions to... $($mailbox.displayname) "
-    Add-MailboxPermission -Identity $y -User "$x" -AccessRights FullAccess -AutoMapping $true
-} elseif ($z -eq "No") {
-    Remove-MailboxPermission -Identity $y -User "$x" -AccessRights FullAccess -Confirm:$false -ErrorAction SilentlyContinue
-    write-host "Adding $x Permissions to... $($mailbox.displayname) "
-    Add-MailboxPermission -Identity $y -User "$x" -AccessRights FullAccess -AutoMapping $false
-} else {
-write-host 'An error occurred'
-}
-}
-Write-Host -ForegroundColor Green '======================================='
-Write-Host -ForegroundColor Green '         All Tasks Complete!           '
+    
+    $Counter++
+	[Int]$Percentage = ($Counter/$accessRights.Count)*100
+	$PB.Value = $Percentage
+	$ObjLabel.Text = "Applying permissions to all Mailboxes."
+	$ObjForm.Refresh()
+	Start-Sleep -Milliseconds 150    
 
+     
+if ($z -eq "Yes") {
+
+    
+
+    Remove-MailboxPermission -Identity $y -User "$x" -AccessRights FullAccess -Confirm:$false -ErrorAction SilentlyContinue
+    Add-MailboxPermission -Identity $y -User "$x" -AccessRights FullAccess -AutoMapping $true
+
+    Add-Content "$logfile" "====================="
+    Add-Content "$logfile" "$DateTime"
+    Add-Content "$Logfile" "$RunningUser"
+    Add-Content "$logfile" "Added $x Full Access to $y's mailbox"
+
+} elseif ($z -eq "No") {
+    
+        
+    Remove-MailboxPermission -Identity $y -User "$x" -AccessRights FullAccess -Confirm:$false -ErrorAction SilentlyContinue
+    Add-MailboxPermission -Identity $y -User "$x" -AccessRights FullAccess -AutoMapping $false
+
+    Add-Content "$logfile" "====================="
+    Add-Content "$logfile" "$DateTime"
+    Add-Content "$Logfile" "$RunningUser"
+    Add-Content "$logfile" "Added $x Full Access to $y's mailbox"
+
+} else {
+
+
+
+}
+}
+#########
+
+    $ObjForm.Refresh()
+    $PB.Value = 90
+	$ObjLabel.Text = "Completed Tasks"
+	$ObjForm.Refresh()
+	Start-Sleep -Milliseconds 150
+
+    $ObjForm.Refresh()
+    $PB.Value = 95
+	$ObjLabel.Text = "Completed Tasks"
+	$ObjForm.Refresh()
+	Start-Sleep -Milliseconds 150
+
+$ObjForm.Close()
+Start-Sleep -Seconds 1
+exit
 }
 

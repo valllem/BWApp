@@ -1,23 +1,7 @@
-﻿## Why are you in here? Please speak with Dale if you have any errors ##
-
-write-Host -ForegroundColor Green '======================================='
-write-Host -ForegroundColor Green '        FORWARDING EMAILS         '
-write-Host -ForegroundColor Green '======================================='
-write-Host -ForegroundColor Green ' '
-
-
-Add-Type -AssemblyName System.Windows.Forms
+﻿Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
-
-try {
 $mailboxes = Get-Mailbox |Select-Object PrimarySmtpAddress
-}
-
-catch {
-write-host -ForegroundColor Red "NOT LOGGED IN. Please select 'switch account' on the main menu "
-}
-
 
 $Form                 = New-Object system.Windows.Forms.Form
 $Form.ClientSize      = '800,420'
@@ -109,25 +93,123 @@ if ($result -eq [System.Windows.Forms.DialogResult]::OK){
     $y = $ListBox2.SelectedItem
     $z = $ListBox3.SelectedItem
 
-write-host 'Updating Forwarding Rules for' $x
+    ## -- Create The Progress-Bar
+	$ObjForm = New-Object System.Windows.Forms.Form
+	$ObjForm.Text = "Running Task"
+	$ObjForm.Height = 100
+	$ObjForm.Width = 500
+	$ObjForm.BackColor = "White"
+
+	$ObjForm.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedSingle
+	$ObjForm.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
+
+	## -- Create The Label
+	$ObjLabel = New-Object System.Windows.Forms.Label
+	$ObjLabel.Text = "Starting Task. Please wait ... "
+	$ObjLabel.Left = 5
+	$ObjLabel.Top = 10
+	$ObjLabel.Width = 500 - 20
+	$ObjLabel.Height = 15
+	$ObjLabel.Font = "Tahoma"
+	## -- Add the label to the Form
+	$ObjForm.Controls.Add($ObjLabel)
+
+	$PB = New-Object System.Windows.Forms.ProgressBar
+	$PB.Name = "PowerShellProgressBar"
+	$PB.Value = 10
+	$PB.Style="Continuous"
+
+	$System_Drawing_Size = New-Object System.Drawing.Size
+	$System_Drawing_Size.Width = 500 - 40
+	$System_Drawing_Size.Height = 20
+	$PB.Size = $System_Drawing_Size
+	$PB.Left = 5
+	$PB.Top = 40
+	$ObjForm.Controls.Add($PB)
+
+	## -- Show the Progress-Bar and Start The PowerShell Script
+	$ObjForm.Show() | Out-Null
+	$ObjForm.Focus() | Out-NUll
+	$ObjLabel.Text = "Preparing Script. Please wait ... "
+	$ObjForm.Refresh()
+
+	Start-Sleep -Milliseconds 300
+#####
+    $ObjForm.Refresh()
+    $PB.Value = 25
+	$ObjLabel.Text = "Configuring Forwarding..."
+	Start-Sleep -Milliseconds 300
+
+
 if ($z -eq "Yes") {
-    Write-Host 'Forwarding emails and keeping a copy in' $x "'s mailbox"
+
+    $ObjForm.Refresh()
+    $PB.Value = 50
+	$ObjLabel.Text = "Forwarding $x emails to $y"
+	$ObjForm.Refresh()
+	Start-Sleep -Milliseconds 300
+
+
     Set-Mailbox -Identity $x -DeliverToMailboxAndForward $true -ForwardingSMTPAddress $y
-    write-host -ForegroundColor Green 'Completed Task'
+
+
+    $ObjForm.Refresh()
+    $PB.Value = 75
+	$ObjLabel.Text = "Successfully Forwarding emails to $y"
+	$ObjForm.Refresh()
+	Start-Sleep -Milliseconds 300
+      
+    Add-Content "$logfile" "====================="
+    Add-Content "$logfile" "$DateTime"
+    Add-Content "$Logfile" "$RunningUser"
+    Add-Content "$logfile" "Forwarding $x emails to $y and keeping a copy in $x's mailbox"
+
+        
+    
+    $ObjForm.Refresh()
+    $PB.Value = 99
+	$ObjLabel.Text = "Completed Task"
+	$ObjForm.Refresh()
+	Start-Sleep -Milliseconds 300
+
+    
 } elseif ($z -eq "No") {
-    Write-Host 'Forwarding emails WITHOUT keeping a copy in' $x "'s mailbox"
+   
+    $ObjForm.Refresh()
+    $PB.Value = 50
+	$ObjLabel.Text = "Forwarding $x emails to $y"
+	$ObjForm.Refresh()
+	Start-Sleep -Milliseconds 300
+
     Set-Mailbox -Identity $x -DeliverToMailboxAndForward $false -ForwardingSMTPAddress $y
-    write-host -ForegroundColor Green 'Completed Task'
+
+    $ObjForm.Refresh()
+    $PB.Value = 75
+	$ObjLabel.Text = "Successfully Forwarding emails to $y"
+	$ObjForm.Refresh()
+	Start-Sleep -Milliseconds 300
+      
+    Add-Content "$logfile" "====================="
+    Add-Content "$logfile" "$DateTime"
+    Add-Content "$Logfile" "$RunningUser"
+    Add-Content "$logfile" "Forwarding $x emails to $y"
+
+        
+    
+    $ObjForm.Refresh()
+    $PB.Value = 99
+	$ObjLabel.Text = "Completed Task"
+	$ObjForm.Refresh()
+	Start-Sleep -Milliseconds 300
+
 } else {
-write-host 'Please try again, and choose whether to Keep a copy of emails or not in the original mailbox...'
+    Add-Content "$logfile" "====================="
+    Add-Content "$logfile" "$DateTime"
+    Add-Content "$Logfile" "$RunningUser"
+    Add-Content "$logfile" "Failed to Forward Emails"
 }
 
-
-Start-Sleep -Seconds 4
+$ObjForm.Close()
+Start-Sleep -Seconds 1
 exit
 }
-
-
-
-
-

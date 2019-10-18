@@ -1,10 +1,4 @@
-﻿
-
-write-Host -ForegroundColor Green '======================================='
-write-Host -ForegroundColor Green '        GRANT USER FULL ACCESS         '
-write-Host -ForegroundColor Green '======================================='
-write-Host -ForegroundColor Green ' '
-
+﻿$logfile = "C:\BWApp\logs\Log.txt"
 
 Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()
@@ -104,41 +98,140 @@ if ($result -eq [System.Windows.Forms.DialogResult]::OK){
     $x = $ListBox1.SelectedItem
     $y = $ListBox2.SelectedItem
     $z = $ListBox3.SelectedItem
+#####
+## -- Create The Progress-Bar
+	$ObjForm = New-Object System.Windows.Forms.Form
+	$ObjForm.Text = "Running Task"
+	$ObjForm.Height = 100
+	$ObjForm.Width = 500
+	$ObjForm.BackColor = "White"
 
-write-host 'Removing any existing permissions in place for' $x
+	$ObjForm.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedSingle
+	$ObjForm.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
+
+	## -- Create The Label
+	$ObjLabel = New-Object System.Windows.Forms.Label
+	$ObjLabel.Text = "Starting Task. Please wait ... "
+	$ObjLabel.Left = 5
+	$ObjLabel.Top = 10
+	$ObjLabel.Width = 500 - 20
+	$ObjLabel.Height = 15
+	$ObjLabel.Font = "Tahoma"
+	## -- Add the label to the Form
+	$ObjForm.Controls.Add($ObjLabel)
+
+	$PB = New-Object System.Windows.Forms.ProgressBar
+	$PB.Name = "PowerShellProgressBar"
+	$PB.Value = 10
+	$PB.Style="Continuous"
+
+	$System_Drawing_Size = New-Object System.Drawing.Size
+	$System_Drawing_Size.Width = 500 - 40
+	$System_Drawing_Size.Height = 20
+	$PB.Size = $System_Drawing_Size
+	$PB.Left = 5
+	$PB.Top = 40
+	$ObjForm.Controls.Add($PB)
+
+	## -- Show the Progress-Bar and Start The PowerShell Script
+	$ObjForm.Show() | Out-Null
+	$ObjForm.Focus() | Out-NUll
+	$ObjLabel.Text = "Preparing Script. Please wait ... "
+	$ObjForm.Refresh()
+
+	Start-Sleep -Milliseconds 300
+#####
+    $ObjForm.Refresh()
+    $PB.Value = 25
+	$ObjLabel.Text = "Adjusting Permissions"
+	Start-Sleep -Milliseconds 300
+
+
 if ($z -eq "Yes") {
 
-try {
-    write-host 'Adding Permissions...'
-    Add-MailboxPermission -Identity $x -User "$y" -AccessRights FullAccess -AutoMapping $true
-}
-catch {
-    Remove-MailboxPermission -Identity $x -User "$y" -AccessRights FullAccess -Confirm:$false -ErrorAction SilentlyContinue
-    write-host 'Updating Permissions...'
-    Add-MailboxPermission -Identity $x -User "$y" -AccessRights FullAccess -AutoMapping $true
-}
+    $ObjForm.Refresh()
+    $PB.Value = 50
+	$ObjLabel.Text = "Giving $y Full Access to $x"
+	$ObjForm.Refresh()
+	Start-Sleep -Milliseconds 300
+
+    Add-MailboxPermission -Identity $x -User "$y" -AccessRights FullAccess -AutoMapping $true | Out-File -Encoding Ascii -append "$logfile"
+
+    $ObjForm.Refresh()
+    $PB.Value = 75
+	$ObjLabel.Text = "Permissions for $y have been set"
+	$ObjForm.Refresh()
+	Start-Sleep -Milliseconds 300
+
+    $RunningUser = whoami
+    $DateTime = Get-Date
+    Add-Content "$logfile" "====================="
+    Add-Content "$logfile" "$DateTime"
+    Add-Content "$Logfile" "$RunningUser"
+    Add-Content "$logfile" "Added Mailbox perms:"
+    Add-Content "$logfile" "$y has Full Access to $x and will be automatically added to Outlook."
     
     
 } elseif ($z -eq "No") {
-try {
-    write-host 'Adding Permissions...'
-    Add-MailboxPermission -Identity $x -User "$y" -AccessRights FullAccess -AutoMapping $false
-    }
-    catch {
-    write-host 'Updating Permissions...'
-    Remove-MailboxPermission -Identity $x -User "$y" -AccessRights FullAccess -Confirm:$false -ErrorAction SilentlyContinue
-    Add-MailboxPermission -Identity $x -User "$y" -AccessRights FullAccess -AutoMapping $false
-    }
+
+    $ObjForm.Refresh()
+    $PB.Value = 50
+	$ObjLabel.Text = "Giving $y Full Access to $x"
+	$ObjForm.Refresh()
+	Start-Sleep -Milliseconds 300
+
+    Add-MailboxPermission -Identity $x -User "$y" -AccessRights FullAccess -AutoMapping $false | Out-File -Encoding Ascii -append "$logfile"
+    
+    $ObjForm.Refresh()
+    $PB.Value = 75
+	$ObjLabel.Text = "Permissions for $y have been set"
+	$ObjForm.Refresh()
+	Start-Sleep -Milliseconds 300
+
+    $RunningUser = whoami
+    $DateTime = Get-Date
+    Add-Content "$logfile" "====================="
+    Add-Content "$logfile" "$DateTime"
+    Add-Content "$Logfile" "$RunningUser"
+    Add-Content "$logfile" "Added Mailbox perms:"
+    Add-Content "$logfile" "$y has Full Access to $x"
+
 } else {
-write-host 'An error occurred. Code: MailboxGrantFull[103-134]'
+    write-host 'An error occurred. Code: MailboxGrantFull[103-134]'
+    Add-Content "$logfile" "====================="
+    Add-Content "$logfile" "$DateTime"
+    Add-Content "$Logfile" "$RunningUser"
+    Add-Content "$logfile" "FAILED to add Mailbox perms:"
+    
 }
 
-write-host -ForegroundColor Green 'Completed Tasks'
-Start-Sleep -Seconds 4
+##
+    $ObjForm.Refresh()
+    $PB.Value = 95
+	$ObjLabel.Text = "Completing"
+	$ObjForm.Refresh()
+	Start-Sleep -Milliseconds 300
+##
+
+
+    $ObjForm.Refresh()
+    $PB.Value = 99
+	$ObjLabel.Text = "Tidying up"
+	$ObjForm.Refresh()
+	Start-Sleep -Milliseconds 300
+## Tidy up tasks here
+
+    $ObjForm.Refresh()
+    $PB.Value = 100
+	$ObjLabel.Text = "Completed Tasks"
+	$ObjForm.Refresh()
+
+    
+
+
+
+Start-Sleep -Seconds 1
+$ObjForm.Close()
+Write-Host "`n"
 exit
 }
-
-
-
-
-

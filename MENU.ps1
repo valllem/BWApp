@@ -1,62 +1,149 @@
-﻿if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')) {
+﻿## START NEW WINDOW AS ADMINISTRATOR ELEVATED ##
+
+if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')) {
  if ([int](Get-CimInstance -Class Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber) -ge 6000) {
   $CommandLine = "-File `"" + $MyInvocation.MyCommand.Path + "`" " + $MyInvocation.UnboundArguments
-  Start-Process -FilePath PowerShell.exe -Verb Runas -ArgumentList $CommandLine
+  Start-Process -FilePath PowerShell.exe -WindowStyle Minimized -Verb Runas -ArgumentList $CommandLine
    
   Exit
  }
 }
+###################
 
+## HIDE THE CONSOLE WINDOW BEFORE GUI LAUNCHES ##
+Add-Type -Name Window -Namespace Console -MemberDefinition '
+[DllImport("Kernel32.dll")]
+public static extern IntPtr GetConsoleWindow();
+[DllImport("user32.dll")]
+public static extern bool ShowWindow(IntPtr hWnd, Int32 nCmdShow);
+'
+$consolePtr = [Console.Window]::GetConsoleWindow()
+[Console.Window]::ShowWindow($consolePtr, 0)
+##################
 
-
-$Path = Get-Content -Path "C:\Temp\BWApp\Path.txt"
-write-host $Path
-Set-Location -Path $Path
-
-Write-Host "`n"
-Write-Host -ForegroundColor Yellow "Signing In`n"
-
-$UserCredential = Get-Credential
-try {
-$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $UserCredential -Authentication Basic -AllowRedirection
-Import-PSSession $Session -DisableNameChecking
-Start-Sleep -Seconds 1
-Connect-AzureAD -Credential $UserCredential
-Connect-MsolService -Credential $UserCredential
-}
-catch {
-Clear-Host
-Write-Host -ForegroundColor Yellow "Using MFA...Switching to Modern Auth."
-Write-Host -ForegroundColor Yellow "Please Sign In again"
-Import-Module $((Get-ChildItem -Path $($env:LOCALAPPDATA+"\Apps\2.0\") `
--Filter Microsoft.Exchange.Management.ExoPowershellModule.dll -Recurse ).FullName|?{$_ -notmatch "_none_"} `
-|select -First 1)
-$EXOSession = New-ExoPSSession
-Import-PSSession $EXOSession
-}
-
-
-
-
-
-
-Clear-Host
-write-host "`n"
-write-host -foregroundcolor Green "Connected to 365`n"
-
-
-
-
-
-
-
+## ENABLE THE GUI ##
 Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()
+
+#################
+
+## PROGRESS BAR LOADING APP ##
+    $ObjForm = New-Object System.Windows.Forms.Form
+	$ObjForm.Text = "Starting App"
+	$ObjForm.Height = 100
+	$ObjForm.Width = 500
+	$ObjForm.BackColor = "White"
+
+	$ObjForm.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedSingle
+	$ObjForm.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
+
+	## -- Create The Label
+	$ObjLabel = New-Object System.Windows.Forms.Label
+	$ObjLabel.Text = "Starting App. Please wait ... "
+	$ObjLabel.Left = 5
+	$ObjLabel.Top = 10
+	$ObjLabel.Width = 500 - 20
+	$ObjLabel.Height = 15
+	$ObjLabel.Font = "Tahoma"
+	## -- Add the label to the Form
+	$ObjForm.Controls.Add($ObjLabel)
+
+	$PB = New-Object System.Windows.Forms.ProgressBar
+	$PB.Name = "PowerShellProgressBar"
+	$PB.Value = 0
+	$PB.Style="Continuous"
+
+	$System_Drawing_Size = New-Object System.Drawing.Size
+	$System_Drawing_Size.Width = 500 - 40
+	$System_Drawing_Size.Height = 20
+	$PB.Size = $System_Drawing_Size
+	$PB.Left = 5
+	$PB.Top = 40
+	$ObjForm.Controls.Add($PB)
+
+	## -- Show the Progress-Bar and Start The PowerShell Script
+	$ObjForm.Show() | Out-Null
+	$ObjForm.Focus() | Out-NUll
+	$ObjLabel.Text = "Please Log In"
+	$ObjForm.Refresh()
+	Start-Sleep -Milliseconds 300
+    
+    $ObjForm.Refresh()
+    $PB.Value = 25
+	$ObjLabel.Text = "Logging In"
+	Start-Sleep -Milliseconds 300
+    
+
+#################
+
+## GET APP LOCATION FROM LAUNCHER TO LOCATE SCRIPTS ##
+    $Path = Get-Content -Path "C:\Temp\BWApp\Path.txt"
+    Set-Location -Path $Path
+#################
+
+## LOGIN WITH BASIC AUTH ##
+    $UserCredential = Get-Credential
+
+#################
+
+## PROGRESS BAR CONNECTING TO AZURE AD ##
+    $ObjForm.Refresh()
+    $PB.Value = 50
+	$ObjLabel.Text = "Connecting to AzureAD"
+	Start-Sleep -Milliseconds 300
+
+################
+
+## CONNECT TO AZUREAD ##
+    Connect-AzureAD -Credential $UserCredential
+
+###############
+
+## START THE LOGIN PROCESS AND CHECK IF MODERN AUTH IS REQUIRED ##
+try {
+    $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $UserCredential -Authentication Basic -AllowRedirection
+    Import-PSSession $Session -DisableNameChecking
+
+    Start-Sleep -seconds 1
+
+    $ObjForm.Refresh()
+    $PB.Value = 75
+	$ObjLabel.Text = "Connecting to MsolService"
+	Start-Sleep -Milliseconds 300
+
+    Connect-MsolService -Credential $UserCredential
+}
+catch {
+
+    $ObjForm.Refresh()
+    $PB.Value = 75
+	$ObjLabel.Text = "Connecting using Modern Auth..."
+	Start-Sleep -Milliseconds 300
+
+    Import-Module $((Get-ChildItem -Path $($env:LOCALAPPDATA+"\Apps\2.0\") `
+    -Filter Microsoft.Exchange.Management.ExoPowershellModule.dll -Recurse ).FullName|?{$_ -notmatch "_none_"} `
+    |select -First 1)
+    $EXOSession = New-ExoPSSession
+    Import-PSSession $EXOSession
+}
+
+    $ObjForm.Refresh()
+    $PB.Value = 99
+	$ObjLabel.Text = "Starting..."
+	Start-Sleep -Milliseconds 300
+
+## CLOSE PROGRESS BAR ##
+$ObjForm.Close()
+
+
+
+## LOAD MAIN FORM ##
 
 $BWApp                           = New-Object system.Windows.Forms.Form
 $BWApp.ClientSize                = '530,722'
 $BWApp.text                      = "BWApp - Main Menu"
 $BWApp.TopMost                   = $false
+
 
 $ButtonCalendarAccess1           = New-Object system.Windows.Forms.Button
 $ButtonCalendarAccess1.text      = "Give Access"
