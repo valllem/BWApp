@@ -1,15 +1,61 @@
-﻿If ((Get-ExecutionPolicy) -ne "RemoteSigned") {    
-    If ((Get-ExecutionPolicy) -ne "Unrestricted") {   
-    Write-Host  "Please open another powershell window as administrator and type the following command..."
-    Write-Host -ForegroundColor red "Set-ExecutionPolicy RemoteSigned -Force"
-    Write-Host -ForegroundColor Green "If you have already done this, press Enter to begin installation"
-    Read-Host -Prompt "Press Enter once done..."
+﻿## CHECK IF EXECUTION POLICY IS REMOTESIGNED ##
+If ((Get-ExecutionPolicy) -ne "RemoteSigned") {    
+    If ((Get-ExecutionPolicy) -ne "unrestricted") {   
+    
+Write-Host ""
+Write-Host ""
+Write-Host ""
+Write-Host ""
+Write-Host ""
+Write-Host ""
+Write-Host ""
+
+Write-Host "                                ██████╗ ██╗    ██╗ █████╗ ██████╗ ██████╗             "
+Write-Host "                                ██╔══██╗██║    ██║██╔══██╗██╔══██╗██╔══██╗            "
+Write-Host "                                ██████╔╝██║ █╗ ██║███████║██████╔╝██████╔╝            "
+Write-Host "                                ██╔══██╗██║███╗██║██╔══██║██╔═══╝ ██╔═══╝             "
+Write-Host "                                ██████╔╝╚███╔███╔╝██║  ██║██║     ██║                 "
+Write-Host "                                ╚═════╝  ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝     ╚═╝                 "
+Write-Host "                                                                                      "
+Write-Host "                ██╗███╗   ██╗███████╗████████╗ █████╗ ██╗     ██╗     ███████╗██████╗ "
+Write-Host "                ██║████╗  ██║██╔════╝╚══██╔══╝██╔══██╗██║     ██║     ██╔════╝██╔══██╗"
+Write-Host "                ██║██╔██╗ ██║███████╗   ██║   ███████║██║     ██║     █████╗  ██████╔╝"
+Write-Host "                ██║██║╚██╗██║╚════██║   ██║   ██╔══██║██║     ██║     ██╔══╝  ██╔══██╗"
+Write-Host "                ██║██║ ╚████║███████║   ██║   ██║  ██║███████╗███████╗███████╗██║  ██║"
+Write-Host "                ╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝"
+Write-Host ""
+Write-Host ""                                                                                      
+Write-Host ""
+Write-Host ""
+Write-Host ""
+Write-Host ""
+Write-Host "     ==========================================================================================="
+Write-Host "        Please open another powershell window as administrator and type the following command..."
+Write-Host ""
+Write-Host ""
+Write-Host ""
+Write-Host ""
+Write-Host "                             Set-ExecutionPolicy RemoteSigned -Force                             " -ForegroundColor Red
+Write-Host ""
+Write-Host ""
+Write-Host ""
+Write-Host ""
+Write-Host "             Once done or if you have already done this, press Enter to begin installation" -ForegroundColor Green
+
+
+
+    ## PAUSE SCRIPT UNTIL KEY PRESSED ##
+    $HOST.UI.RawUI.ReadKey(“NoEcho,IncludeKeyDown”) | OUT-NULL
+    $HOST.UI.RawUI.Flushinputbuffer()
+
+
 }
 }
 else {
 
 }
 
+## RUN AS ELEVATED WINDOW ##
 if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')) {
  if ([int](Get-CimInstance -Class Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber) -ge 6000) {
   $CommandLine = "-File `"" + $MyInvocation.MyCommand.Path + "`" " + $MyInvocation.UnboundArguments
@@ -25,8 +71,6 @@ if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 
 
 Write-Progress -Activity "Installing BWAPP" -Status "Getting Ready" -PercentComplete 1
-Start-Sleep -Seconds 2
-
  
 
 
@@ -315,27 +359,47 @@ cd desktop
 $ShortCutDir = Get-Location
 write-host $ShortCutDir
 Start-Sleep -Seconds 2
-function set-shortcut {
-param ( [string]$SourceLnk, [string]$DestinationPath )
-    $WshShell = New-Object -comObject WScript.Shell
-    $Shortcut = $WshShell.CreateShortcut($SourceLnk)
-    $Shortcut.TargetPath = $DestinationPath
-    $Shortcut.Save()
-    }
-set-shortcut "$ShortcutDir\BWApp.lnk" "$Path\BWApp-master\Launcher.ps1"
-Start-Sleep -Seconds 2
+
+
+$WshShell = New-Object -comObject WScript.Shell
+$Shortcut = $WshShell.CreateShortcut("$ShortCutDir\BWApp.lnk")
+$Shortcut.TargetPath = """C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"""
+$argA = """C:\BWApp\BWApp-master\Launcher.ps1"""
+##$argB = """/S:Search Card"""
+$Shortcut.Arguments = $argA
+$Shortcut.Save()
+
+Write-Progress -Activity "Installing BWAPP" -Status "Ready" -Completed
 Clear-Host
 
+    
+Write-Host " "
+Write-Host " "
+Write-Host " "
+Write-Host " "
+Write-Host " "
+Write-Host "     ██╗███╗   ██╗███████╗████████╗ █████╗ ██╗     ██╗      █████╗ ████████╗██╗ ██████╗ ███╗   ██╗"
+Write-Host "     ██║████╗  ██║██╔════╝╚══██╔══╝██╔══██╗██║     ██║     ██╔══██╗╚══██╔══╝██║██╔═══██╗████╗  ██║"
+Write-Host "     ██║██╔██╗ ██║███████╗   ██║   ███████║██║     ██║     ███████║   ██║   ██║██║   ██║██╔██╗ ██║"
+Write-Host "     ██║██║╚██╗██║╚════██║   ██║   ██╔══██║██║     ██║     ██╔══██║   ██║   ██║██║   ██║██║╚██╗██║"
+Write-Host "     ██║██║ ╚████║███████║   ██║   ██║  ██║███████╗███████╗██║  ██║   ██║   ██║╚██████╔╝██║ ╚████║"
+Write-Host "     ╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝"
+Write-Host "                                                                                             "
+Write-Host "      ██████╗ ██████╗ ███╗   ███╗██████╗ ██╗     ███████╗████████╗███████╗                        "
+Write-Host "     ██╔════╝██╔═══██╗████╗ ████║██╔══██╗██║     ██╔════╝╚══██╔══╝██╔════╝                        "
+Write-Host "     ██║     ██║   ██║██╔████╔██║██████╔╝██║     █████╗     ██║   █████╗                          "
+Write-Host "     ██║     ██║   ██║██║╚██╔╝██║██╔═══╝ ██║     ██╔══╝     ██║   ██╔══╝                          "
+Write-Host "     ╚██████╗╚██████╔╝██║ ╚═╝ ██║██║     ███████╗███████╗   ██║   ███████╗                        "
+Write-Host "      ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚═╝     ╚══════╝╚══════╝   ╚═╝   ╚══════╝                        "
+Write-Host "                                                                                             "
+Write-Host ""
+Write-Host ""
+Write-Host ""
+Write-Host ""
+Write-Host "                             Press any key to Close         "
 
-Write-Host
-Write-Host
-Write-Host
-Write-Host
-Write-Host
-Write-Host
-Write-Host
-Write-Host -ForegroundColor Green "  INSTALLATION COMPLETE.          "
-Write-Host
-Write-Host
-Write-Host
-read-host -Prompt '  Press Enter to Close Installer'
+
+## WAIT FOR ANY KEY PRESS (OR IF CONSOLE HIDDEN, CLOSE WINDOW)
+
+    $HOST.UI.RawUI.ReadKey(“NoEcho,IncludeKeyDown”) | OUT-NULL
+    $HOST.UI.RawUI.Flushinputbuffer()
