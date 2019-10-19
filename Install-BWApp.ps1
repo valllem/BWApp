@@ -1,19 +1,49 @@
 ﻿## CHECK IF EXECUTION POLICY IS REMOTESIGNED ##
 If ((Get-ExecutionPolicy) -ne "RemoteSigned") {    
     If ((Get-ExecutionPolicy) -ne "unrestricted") {   
-    Write-Host ""
-    Write-Host ""
-    Write-Host ""
-    Write-Host ""
-    Write-Host "                ==========================================================================================="
-    Write-Host "                 Please open another powershell window as administrator and type the following command..."
-    Write-Host "                "
-    Write-Host -ForegroundColor red "                Set-ExecutionPolicy RemoteSigned -Force"
-    Write-Host ""
-    Write-Host ""
-    Write-Host ""
-    Write-Host ""
-    Write-Host -ForegroundColor Green "                If you have already done this, press Enter to begin installation"
+    
+Write-Host ""
+Write-Host ""
+Write-Host ""
+Write-Host ""
+Write-Host ""
+Write-Host ""
+Write-Host ""
+
+Write-Host "                                ██████╗ ██╗    ██╗ █████╗ ██████╗ ██████╗             "
+Write-Host "                                ██╔══██╗██║    ██║██╔══██╗██╔══██╗██╔══██╗            "
+Write-Host "                                ██████╔╝██║ █╗ ██║███████║██████╔╝██████╔╝            "
+Write-Host "                                ██╔══██╗██║███╗██║██╔══██║██╔═══╝ ██╔═══╝             "
+Write-Host "                                ██████╔╝╚███╔███╔╝██║  ██║██║     ██║                 "
+Write-Host "                                ╚═════╝  ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝     ╚═╝                 "
+Write-Host "                                                                                      "
+Write-Host "                ██╗███╗   ██╗███████╗████████╗ █████╗ ██╗     ██╗     ███████╗██████╗ "
+Write-Host "                ██║████╗  ██║██╔════╝╚══██╔══╝██╔══██╗██║     ██║     ██╔════╝██╔══██╗"
+Write-Host "                ██║██╔██╗ ██║███████╗   ██║   ███████║██║     ██║     █████╗  ██████╔╝"
+Write-Host "                ██║██║╚██╗██║╚════██║   ██║   ██╔══██║██║     ██║     ██╔══╝  ██╔══██╗"
+Write-Host "                ██║██║ ╚████║███████║   ██║   ██║  ██║███████╗███████╗███████╗██║  ██║"
+Write-Host "                ╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝"
+Write-Host ""
+Write-Host ""                                                                                      
+Write-Host ""
+Write-Host ""
+Write-Host ""
+Write-Host ""
+Write-Host "     ==========================================================================================="
+Write-Host "        Please open another powershell window as administrator and type the following command..."
+Write-Host ""
+Write-Host ""
+Write-Host ""
+Write-Host ""
+Write-Host "                             Set-ExecutionPolicy RemoteSigned -Force                             " -ForegroundColor Red
+Write-Host ""
+Write-Host ""
+Write-Host ""
+Write-Host ""
+Write-Host "             Once done or if you have already done this, press Enter to begin installation" -ForegroundColor Green
+
+
+
     ## PAUSE SCRIPT UNTIL KEY PRESSED ##
     $HOST.UI.RawUI.ReadKey(“NoEcho,IncludeKeyDown”) | OUT-NULL
     $HOST.UI.RawUI.Flushinputbuffer()
@@ -107,7 +137,7 @@ $output = [IO.Path]::Combine($Path, "BWApp_$Version.zip”)
 
 
     $ObjForm.Refresh()
-    $PB.Value = 20
+    $PB.Value = 10
 	$ObjLabel.Text = "Checking Required Modules ..."
 	Start-Sleep -Seconds 2
  
@@ -121,9 +151,9 @@ $output = [IO.Path]::Combine($Path, "BWApp_$Version.zip”)
 	$ObjForm2.BackColor = "White"
 
 	$ObjForm2.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedSingle
-	##$ObjForm2.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
-    $ObjForm2.Location.X = 500
-    $ObjForm2.Location.Y = 500
+	$ObjForm2.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
+    ##$ObjForm2.Location.X = 500
+    ##$ObjForm2.Location.Y = 500
 
 	## -- Create The Label
 	$ObjLabel2 = New-Object System.Windows.Forms.Label
@@ -215,7 +245,7 @@ else {
 
     $ObjForm2.Refresh()
     $PB2.Value = 60
-	$ObjLabel2.Text = "Installing Modules ..."
+	$ObjLabel2.Text = "Installing Modules, this may take several minutes..."
 	Start-Sleep -Milliseconds 300
 
 if (Get-Module -ListAvailable -Name Microsoft.Online.SharePoint.PowerShell) {
@@ -225,10 +255,15 @@ else {
    
     Install-Module -Name Microsoft.Online.SharePoint.PowerShell -force
 }
+    
+    $ObjForm.Refresh()
+    $PB.Value = 20
+	$ObjLabel.Text = "Importing Required Scripts..."
+	Start-Sleep -Milliseconds 300
 
     $ObjForm2.Refresh()
     $PB2.Value = 70
-	$ObjLabel2.Text = "Installing Modules ..."
+	$ObjLabel2.Text = "Installing Modules, this may take several minutes..."
 	Start-Sleep -Milliseconds 300
   
 if (Get-Module -ListAvailable -Name MSOnline) {
@@ -241,7 +276,7 @@ else {
 
     $ObjForm2.Refresh()
     $PB2.Value = 80
-	$ObjLabel2.Text = "Installing Modules ..."
+	$ObjLabel2.Text = "Installing Modules, this may take several minutes..."
 	Start-Sleep -Milliseconds 300
 
 if (Get-Module -ListAvailable -Name AzureRM) {
@@ -252,9 +287,14 @@ else {
     Install-Module -name AzureRM -Force
 }    
 
+    $ObjForm.Refresh()
+    $PB.Value = 30
+	$ObjLabel.Text = "Importing Required Scripts..."
+	Start-Sleep -Milliseconds 300
+
     $ObjForm2.Refresh()
     $PB2.Value = 90
-	$ObjLabel2.Text = "Installing Modules ..."
+	$ObjLabel2.Text = "Installing Modules, this may take several minutes..."
 	Start-Sleep -Milliseconds 300
 
 if (Get-Module -ListAvailable -Name CreateExoPsSession) {
@@ -267,7 +307,7 @@ else {
 
     $ObjForm2.Refresh()
     $PB2.Value = 100
-	$ObjLabel2.Text = "Installing Modules ..."
+	$ObjLabel2.Text = "Installing Modules, this may take several minutes..."
 	Start-Sleep -Milliseconds 300
     
     Install-Module -Name Microsoft.Exchange.Management.ExoPowershellModule -Force -AllowClobber
@@ -539,10 +579,14 @@ set-shortcut "$ShortcutDir\BWApp.lnk" "$Path\BWApp-master\Launcher.ps1"
     $PB.Value = 100
 	$ObjLabel.Text = "Installation Complete"
 	Start-Sleep -Seconds 3
-
-    Clear-Host
+    
 
     [Console.Window]::ShowWindow($consolePtr, 1)
+
+
+Clear-Host
+
+    
 Write-Host " "
 Write-Host " "
 Write-Host " "
