@@ -471,87 +471,7 @@ Param(
 	$ObjLabel.Text = "Loading Exchange MFA Module"
 	Start-Sleep -Milliseconds 300
 
-## LOAD EXCHANGE MFA MODULE ##
-Function Load-ExchangeMFAModule { 
-[CmdletBinding()] 
-Param ()
-    $Modules = @(Get-ChildItem -Path "$($env:LOCALAPPDATA)\Apps\2.0" -Filter "Microsoft.Exchange.Management.ExoPowershellModule.manifest" -Recurse )
-    if ($Modules.Count -ne 1 ) {
-        throw "No or Multiple Modules found : Count = $($Modules.Count )"  
-    }  else {
-        $ModuleName =  Join-path $Modules[0].Directory.FullName "Microsoft.Exchange.Management.ExoPowershellModule.dll"
-        Write-Verbose "Start Importing MFA Module"
-        if ($PSVersionTable.PSVersion -ge "5.0")  { 
-            Import-Module -FullyQualifiedName $ModuleName  -Force 
-        } else { 
-            #in case -FullyQualifiedName is not supported
-            Import-Module $ModuleName  -Force 
-        }
 
-        $ScriptName =  Join-path $Modules[0].Directory.FullName "CreateExoPSSession.ps1"
-        if (Test-Path $ScriptName) {
-            return $ScriptName
-<#
-            # Load the script to add the additional commandlets (Connect-EXOPSSession)
-            # DotSourcing does not work from inside a function (. $ScriptName)
-            #Therefore load the script as a dynamic module instead
- 
-            $content = Get-Content -Path $ScriptName -Raw -ErrorAction Stop
-            #BugBug >> $PSScriptRoot is Blank :-(
-<#
-            $PipeLine = $Host.Runspace.CreatePipeline()
-            $PipeLine.Commands.AddScript(". $scriptName")
-            $r = $PipeLine.Invoke()
-#Err : Pipelines cannot be run concurrently.
- 
-            $scriptBlock = [scriptblock]::Create($content)
-            New-Module -ScriptBlock $scriptBlock -Name "Microsoft.Exchange.Management.CreateExoPSSession.ps1" -ReturnResult -ErrorAction SilentlyContinue
-#>
-
-        } else {
-            throw "Script not found"
-            return $null
-        }
-    }
-}
-
-
-    $ObjForm.Refresh()
-    $PB.Value = 80
-	$ObjLabel.Text = "Preparing ClickOnce Script ..."
-	Start-Sleep -Milliseconds 300
-
-
-if ((Test-ClickOnce -ApplicationName "Microsoft Exchange Online Powershell Module" ) -eq $false)  {
-   Install-ClickOnce -Manifest "https://cmdletpswmodule.blob.core.windows.net/exopsmodule/Microsoft.Online.CSE.PSModule.Client.application"
-}
-#Load the Module
-$script = Load-ExchangeMFAModule -Verbose
-#Dot Source the associated script
-. $Script
-
-
-    $ObjForm.Refresh()
-    $PB.Value = 90
-	$ObjLabel.Text = "Downloading Components ..."
-	Start-Sleep -Milliseconds 300
-    
-#Download file
-(New-Object System.Net.WebClient).DownloadFile($url, $output)
-Start-Sleep -Seconds 2    
-# Unzip the Archive
-
-    $ObjForm.Refresh()
-    $PB.Value = 95
-	$ObjLabel.Text = "Extracting Components ..."
-	Start-Sleep -Milliseconds 300
-
-Expand-Archive $output -DestinationPath $Path -Force
-    
-#Set the environment variable
-##$Home = [IO.Path]::Combine($Path, "BWApp")
-   
-##[Environment]::SetEnvironmentVariable("HOME", "$Home", "User")
 
     $ObjForm.Refresh()
     $PB.Value = 99
@@ -565,14 +485,19 @@ cd desktop
 $ShortCutDir = Get-Location
 
 Start-Sleep -Seconds 2
-function set-shortcut {
-param ( [string]$SourceLnk, [string]$DestinationPath )
-    $WshShell = New-Object -comObject WScript.Shell
-    $Shortcut = $WshShell.CreateShortcut($SourceLnk)
-    $Shortcut.TargetPath = $DestinationPath
-    $Shortcut.Save()
-    }
-set-shortcut "$ShortcutDir\BWApp.lnk" "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe C:\BWApp\BWApp-master\Launcher.ps1"
+
+
+
+
+$WshShell = New-Object -comObject WScript.Shell
+$Shortcut = $WshShell.CreateShortcut("$ShortCutDir\BWApp.lnk")
+$Shortcut.TargetPath = """C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"""
+$argA = """C:\BWApp\BWApp-master\Launcher.ps1"""
+##$argB = """/S:Search Card"""
+$Shortcut.Arguments = $argA
+$Shortcut.Save()
+
+
 
 
     $ObjForm.Refresh()
