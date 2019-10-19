@@ -2,30 +2,94 @@
 $Path = "C:\BWApp"
 $output = [IO.Path]::Combine($Path, "BWApp.zip”)
 
-Write-Progress -Activity "Updating BWApp" -Status "Getting Ready" -PercentComplete 15    
+## ENABLE THE GUI ##
+    Add-Type -AssemblyName System.Windows.Forms
+    [System.Windows.Forms.Application]::EnableVisualStyles()
 
-Write-Progress -Activity "Updating BWApp" -Status "Downloading Components" -PercentComplete 30
+## PROGRESS BAR INSTALLING APP ##
+    $ObjForm = New-Object System.Windows.Forms.Form
+	$ObjForm.Text = "Updating"
+	$ObjForm.Height = 100
+	$ObjForm.Width = 500
+	$ObjForm.BackColor = "White"
+
+	$ObjForm.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedSingle
+	$ObjForm.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
+
+    ## -- Create The Label
+	$ObjLabel = New-Object System.Windows.Forms.Label
+	$ObjLabel.Text = "Updating App. Please wait ... "
+	$ObjLabel.Left = 5
+	$ObjLabel.Top = 10
+	$ObjLabel.Width = 500 - 20
+	$ObjLabel.Height = 15
+	$ObjLabel.Font = "Tahoma"
+	## -- Add the label to the Form
+	$ObjForm.Controls.Add($ObjLabel)
+
+	$PB = New-Object System.Windows.Forms.ProgressBar
+	$PB.Name = "PowerShellProgressBar"
+	$PB.Value = 10
+	$PB.Style="Continuous"
+
+	$System_Drawing_Size = New-Object System.Drawing.Size
+	$System_Drawing_Size.Width = 500 - 40
+	$System_Drawing_Size.Height = 20
+	$PB.Size = $System_Drawing_Size
+	$PB.Left = 5
+	$PB.Top = 40
+	$ObjForm.Controls.Add($PB)
+
+	## -- Show the Progress-Bar and Start The PowerShell Script
+	$ObjForm.Show() | Out-Null
+	$ObjForm.Focus() | Out-NUll
+	$ObjLabel.Text = "Updating App. Please wait ..."
+	$ObjForm.Refresh()
+	Start-Sleep -Milliseconds 300
+    
+    $ObjForm.Refresh()
+    $PB.Value = 15
+	$ObjLabel.Text = "Updating App. Getting Ready ..."
+	Start-Sleep -Milliseconds 300
+
+
+    $ObjForm.Refresh()
+    $PB.Value = 30
+	$ObjLabel.Text = "Updating App. Downloading Components ..."
+	Start-Sleep -Milliseconds 300
+
+
 (New-Object System.Net.WebClient).DownloadFile($url, $output)
-Clear-Host
-Write-Progress -Activity "Updating BWApp" -Status "File Downloaded" -PercentComplete 35
-Start-Sleep -Seconds 2    
-Write-Progress -Activity "Updating BWApp" -Status "Extracting..." -PercentComplete 45
-Start-Sleep -Seconds 2  
+
+    $ObjForm.Refresh()
+    $PB.Value = 40
+	$ObjLabel.Text = "Updating App. File Downloaded ..."
+	Start-Sleep -Milliseconds 300
+ 
+    $ObjForm.Refresh()
+    $PB.Value = 50
+	$ObjLabel.Text = "Updating App. Extracting Files ..."
+	Start-Sleep -Milliseconds 300
+
+ 
 # Unzip the Archive
 Expand-Archive $output -DestinationPath $Path -Force
-Clear-Host
-Write-Progress -Activity "Updating BWApp" -Status "Files Extracted" -PercentComplete 50
-Write-Progress -Activity "Updating BWApp" -Status "Tidying Up" -PercentComplete 60
-## I need to add the tidy up script here.
-Start-Sleep -Seconds 2     
-##=======================
+    
+    $ObjForm.Refresh()
+    $PB.Value = 70
+	$ObjLabel.Text = "Updating App. Files Extracted ..."
+	Start-Sleep -Milliseconds 300
 
-Write-Progress -Activity "Updating BWApp" -Status "Updating shortcuts..." -PercentComplete 75
+    $ObjForm.Refresh()
+    $PB.Value = 80
+	$ObjLabel.Text = "Updating App. Updating Shortcuts ..."
+	Start-Sleep -Milliseconds 300
+
 Start-Sleep -Seconds 2 
 cd $HOME
 cd desktop
 $ShortCutDir = Get-Location
-Clear-Host
+
 function set-shortcut {
 param ( [string]$SourceLnk, [string]$DestinationPath )
     $WshShell = New-Object -comObject WScript.Shell
@@ -33,21 +97,24 @@ param ( [string]$SourceLnk, [string]$DestinationPath )
     $Shortcut.TargetPath = $DestinationPath
     $Shortcut.Save()
     }
-set-shortcut "$ShortcutDir\BWApp.lnk" "$Path\BWApp-master\Launcher.ps1"
-Clear-Host
-Write-Progress -Activity "Updating BWApp" -Status "Finishing Update..." -PercentComplete 90
-Start-Sleep -Seconds 2
+set-shortcut "$ShortcutDir\BWApp.lnk" "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe C:\BWApp\BWApp-master\Launcher.ps1"
+
+
+
+    $ObjForm.Refresh()
+    $PB.Value = 90
+	$ObjLabel.Text = "Updating App. Finishing Update ..."
+	Start-Sleep -Milliseconds 300
+
+
 cd "C:\BWApp\BWApp-master"
 
-Clear-Host
+
 Write-Progress -Activity "Updating BWApp" -Status "FINISHED UPDATE" -PercentComplete 100
-Start-Sleep -Seconds 1 
-Write-Host
-Write-Host
-Write-Host
-Write-Host
-Write-Host
-Write-Host
-Write-Host
-Write-Host -ForegroundColor Yellow "You may need to restart the App for changes to take effect..."
-Write-Host -ForegroundColor Green "READY:"
+    $ObjForm.Refresh()
+    $PB.Value = 100
+	$ObjLabel.Text = "Updating App. FINISHED!"
+	Start-Sleep -Milliseconds 300
+
+
+

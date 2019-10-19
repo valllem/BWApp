@@ -572,7 +572,7 @@ param ( [string]$SourceLnk, [string]$DestinationPath )
     $Shortcut.TargetPath = $DestinationPath
     $Shortcut.Save()
     }
-set-shortcut "$ShortcutDir\BWApp.lnk" "$Path\BWApp-master\Launcher.ps1"
+set-shortcut "$ShortcutDir\BWApp.lnk" "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe C:\BWApp\BWApp-master\Launcher.ps1"
 
 
     $ObjForm.Refresh()
