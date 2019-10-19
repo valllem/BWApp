@@ -90,14 +90,23 @@ cd $HOME
 cd desktop
 $ShortCutDir = Get-Location
 
-function set-shortcut {
-param ( [string]$SourceLnk, [string]$DestinationPath )
-    $WshShell = New-Object -comObject WScript.Shell
-    $Shortcut = $WshShell.CreateShortcut($SourceLnk)
-    $Shortcut.TargetPath = $DestinationPath
-    $Shortcut.Save()
-    }
-set-shortcut "$ShortcutDir\BWApp.lnk" "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe C:\BWApp\BWApp-master\Launcher.ps1"
+##function set-shortcut {
+##param ( [string]$SourceLnk, [string]$DestinationPath )
+  ##  $WshShell = New-Object -comObject WScript.Shell
+    ##$Shortcut = $WshShell.CreateShortcut($SourceLnk)
+    ##$Shortcut.TargetPath = $DestinationPath
+    ##$Shortcut.Save()
+    ##}
+##set-shortcut "$ShortcutDir\BWApp.lnk" "`"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe`" C:\BWApp\BWApp-master\Launcher.ps1"
+
+$WshShell = New-Object -comObject WScript.Shell
+$Shortcut = $WshShell.CreateShortcut("$ShortCutDir\BWApp.lnk")
+$Shortcut.TargetPath = """C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"""
+$argA = """C:\BWApp\BWApp-master\Launcher.ps1"""
+##$argB = """/S:Search Card"""
+$Shortcut.Arguments = $argA
+##+ " " + $argB
+$Shortcut.Save()
 
 
 
