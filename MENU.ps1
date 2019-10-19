@@ -297,7 +297,14 @@ $LabelClickInstallPowershell.height  = 10
 $LabelClickInstallPowershell.location  = New-Object System.Drawing.Point(24,28)
 $LabelClickInstallPowershell.Font  = 'Microsoft Sans Serif,10'
 
-
+$LabelWiki                       = New-Object system.Windows.Forms.Label
+$LabelWiki.text                  = "HELP WIKI"
+$LabelWiki.AutoSize              = $true
+$LabelWiki.width                 = 25
+$LabelWiki.height                = 10
+$LabelWiki.location              = New-Object System.Drawing.Point(213,28)
+$LabelWiki.Font                  = 'Microsoft Sans Serif,10,style=Bold'
+$LabelWiki.ForeColor             = "#f5a623"
 
 $LabelSignOutClose               = New-Object system.Windows.Forms.Label
 $LabelSignOutClose.text          = "Sign Out & Exit"
@@ -394,7 +401,7 @@ $LabelCustomCommand.location     = New-Object System.Drawing.Point(304,696)
 $LabelCustomCommand.Font         = 'Microsoft Sans Serif,10,style=Bold'
 $LabelCustomCommand.ForeColor    = "#9013fe"
 
-$BWApp.controls.AddRange(@($ButtonCalendarAccess1,$ButtonGiveAccessAll,$ButtonRemoveAccess,$ButtonCheckAccess,$ButtonFullAccess1,$ButtonRemoveFull,$ButtonSendAs,$ButtonForward,$ButtonFullAll,$ButtonRemoveAll,$ButtonCheckLogs,$ButtonRenameUPN,$ButtonRenameUser,$ButtonDisableUser,$ButtonEnableUser,$ButtonBlockEmail,$ButtonBlockDomain,$ButtonPrepareTenancy,$ButtonEnableAuditLog,$LabelClickInstallPowershell,$LabelLogin,$LabelSignOutClose,$ButtonAllDistMembers,$ButtonAllPerms,$ButtonEnableOOF,$ButtonDisableOOF,$GroupBoxMenu,$ButtonAllForwards,$GroupboxMailBox,$GroupboxCalendar,$GroupboxUsers,$GroupboxSecurity,$CheckMailboxPerms,$LabelCustomCommand))
+$BWApp.controls.AddRange(@($ButtonCalendarAccess1,$ButtonGiveAccessAll,$ButtonRemoveAccess,$ButtonCheckAccess,$ButtonFullAccess1,$ButtonRemoveFull,$ButtonSendAs,$ButtonForward,$ButtonFullAll,$ButtonRemoveAll,$ButtonCheckLogs,$ButtonRenameUPN,$ButtonRenameUser,$ButtonDisableUser,$ButtonEnableUser,$ButtonBlockEmail,$ButtonBlockDomain,$ButtonPrepareTenancy,$ButtonEnableAuditLog,$LabelClickInstallPowershell,$LabelWiki,$LabelSignOutClose,$ButtonAllDistMembers,$ButtonAllPerms,$ButtonEnableOOF,$ButtonDisableOOF,$GroupBoxMenu,$ButtonAllForwards,$GroupboxMailBox,$GroupboxCalendar,$GroupboxUsers,$GroupboxSecurity,$CheckMailboxPerms,$LabelCustomCommand))
 
 $ButtonFullAccess1.Add_Click({.\MailboxGrantFull.ps1})
 $ButtonRemoveFull.Add_Click({.\MailboxRemoveFull.ps1})
@@ -417,7 +424,7 @@ $ButtonPrepareTenancy.Add_Click({.\prepareTenant.ps1})
 $ButtonEnableAuditLog.Add_Click({.\365EnableAuditLog.ps1})
 $LabelClickInstallPowershell.Add_Click({.\updateApp.ps1})
 $LabelSignOutClose.Add_Click({.\SignOutClose.ps1;$BWApp.Close()})
-$LabelLogin.Add_Click({.\SwitchUser.ps1})
+$LabelWiki.Add_Click({Start "https://github.com/valllem/BWApp/wiki"})
 $ButtonEnableOOF.Add_Click({.\365EnableOOF.ps1})
 $ButtonDisableOOF.Add_Click({.\365DisableOOF.ps1})
 $ButtonAllDistMembers.Add_Click({.\Get-All-DistMembers.ps1})
