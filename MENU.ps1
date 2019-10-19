@@ -297,14 +297,7 @@ $LabelClickInstallPowershell.height  = 10
 $LabelClickInstallPowershell.location  = New-Object System.Drawing.Point(24,28)
 $LabelClickInstallPowershell.Font  = 'Microsoft Sans Serif,10'
 
-$LabelLogin                      = New-Object system.Windows.Forms.Label
-$LabelLogin.text                 = "Switch Account"
-$LabelLogin.AutoSize             = $true
-$LabelLogin.width                = 25
-$LabelLogin.height               = 10
-$LabelLogin.location             = New-Object System.Drawing.Point(232,28)
-$LabelLogin.Font                 = 'Microsoft Sans Serif,10,style=Bold'
-$LabelLogin.ForeColor            = "#f5a623"
+
 
 $LabelSignOutClose               = New-Object system.Windows.Forms.Label
 $LabelSignOutClose.text          = "Sign Out & Exit"
