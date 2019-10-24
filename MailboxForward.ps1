@@ -1,4 +1,5 @@
-﻿Add-Type -AssemblyName System.Windows.Forms
+﻿$logfile = "C:\BWApp\Logs\Log.txt"
+Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
 $mailboxes = Get-Mailbox |Select-Object PrimarySmtpAddress
@@ -159,7 +160,7 @@ if ($z -eq "Yes") {
 	$ObjForm.Refresh()
 	Start-Sleep -Milliseconds 300
       
-    Add-Content "$logfile" "====================="
+    Add-Content "$logfile" "=======FORWARD======="
     Add-Content "$logfile" "$DateTime"
     Add-Content "$Logfile" "$RunningUser"
     Add-Content "$logfile" "Forwarding $x emails to $y and keeping a copy in $x's mailbox"
@@ -189,7 +190,7 @@ if ($z -eq "Yes") {
 	$ObjForm.Refresh()
 	Start-Sleep -Milliseconds 300
       
-    Add-Content "$logfile" "====================="
+    Add-Content "$logfile" "======FORWARD======="
     Add-Content "$logfile" "$DateTime"
     Add-Content "$Logfile" "$RunningUser"
     Add-Content "$logfile" "Forwarding $x emails to $y"

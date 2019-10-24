@@ -1,8 +1,8 @@
-﻿
+﻿$logfile = "C:\BWApp\Logs\Log.txt"
 Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
-$logfile = "C:\BWApp\Logs\Log.txt"
+
 
 $mailboxes = Get-Mailbox |Select-Object PrimarySmtpAddress
 
