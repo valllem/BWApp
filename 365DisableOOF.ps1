@@ -1,8 +1,4 @@
-﻿write-host -ForegroundColor Yellow 'Out of Office'
-write-host -ForegroundColor Yellow '====================='
-$colourAlert = "Yellow"
-$colourInfo = "Green"
-
+﻿$logfile = "C:\BWApp\Logs\Log.txt"
 
 Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()
