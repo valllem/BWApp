@@ -401,7 +401,17 @@ $LabelCustomCommand.location     = New-Object System.Drawing.Point(304,696)
 $LabelCustomCommand.Font         = 'Microsoft Sans Serif,10,style=Bold'
 $LabelCustomCommand.ForeColor    = "#9013fe"
 
-$BWApp.controls.AddRange(@($ButtonCalendarAccess1,$ButtonGiveAccessAll,$ButtonRemoveAccess,$ButtonCheckAccess,$ButtonFullAccess1,$ButtonRemoveFull,$ButtonSendAs,$ButtonForward,$ButtonFullAll,$ButtonRemoveAll,$ButtonCheckLogs,$ButtonRenameUPN,$ButtonRenameUser,$ButtonDisableUser,$ButtonEnableUser,$ButtonBlockEmail,$ButtonBlockDomain,$ButtonPrepareTenancy,$ButtonEnableAuditLog,$LabelClickInstallPowershell,$LabelWiki,$LabelSignOutClose,$ButtonAllDistMembers,$ButtonAllPerms,$ButtonEnableOOF,$ButtonDisableOOF,$GroupBoxMenu,$ButtonAllForwards,$GroupboxMailBox,$GroupboxCalendar,$GroupboxUsers,$GroupboxSecurity,$CheckMailboxPerms,$LabelCustomCommand))
+
+$LabelLogs                       = New-Object system.Windows.Forms.Label
+$LabelLogs.text                  = "Open Log Folder"
+$LabelLogs.AutoSize              = $true
+$LabelLogs.width                 = 25
+$LabelLogs.height                = 10
+$LabelLogs.location              = New-Object System.Drawing.Point(40,696)
+$LabelLogs.Font                  = 'Microsoft Sans Serif,10,style=Bold'
+$LabelLogs.ForeColor             = "#9013fe"
+
+$BWApp.controls.AddRange(@($ButtonCalendarAccess1,$ButtonGiveAccessAll,$ButtonRemoveAccess,$ButtonCheckAccess,$ButtonFullAccess1,$ButtonRemoveFull,$ButtonSendAs,$ButtonForward,$ButtonFullAll,$ButtonRemoveAll,$ButtonCheckLogs,$ButtonRenameUPN,$ButtonRenameUser,$ButtonDisableUser,$ButtonEnableUser,$ButtonBlockEmail,$ButtonBlockDomain,$ButtonPrepareTenancy,$ButtonEnableAuditLog,$LabelClickInstallPowershell,$LabelWiki,$LabelSignOutClose,$ButtonAllDistMembers,$ButtonAllPerms,$ButtonEnableOOF,$ButtonDisableOOF,$GroupBoxMenu,$ButtonAllForwards,$GroupboxMailBox,$GroupboxCalendar,$GroupboxUsers,$GroupboxSecurity,$CheckMailboxPerms,$LabelCustomCommand,$LabelLogs))
 
 $ButtonFullAccess1.Add_Click({.\MailboxGrantFull.ps1})
 $ButtonRemoveFull.Add_Click({.\MailboxRemoveFull.ps1})
@@ -432,5 +442,6 @@ $ButtonAllPerms.Add_Click({.\Get-All-Perms.ps1})
 $ButtonAllForwards.Add_Click({.\AllForwards.ps1})
 $CheckMailboxPerms.Add_Click({.\MailboxCheck.ps1})
 $LabelCustomCommand.Add_Click({.\CustomCommand.ps1})
+$LabelLogs.Add_Click({ii C:\BWApp\Logs\})
 
 $result = $BWApp.ShowDialog()
