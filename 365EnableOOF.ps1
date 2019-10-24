@@ -1,7 +1,4 @@
-﻿write-host -ForegroundColor Yellow 'Out of Office'
-write-host -ForegroundColor Yellow '====================='
-$colourAlert = "Yellow"
-$colourInfo = "Green"
+﻿$logfile = "C:\BWApp\Logs\Log.txt"
 
 
 Add-Type -AssemblyName System.Windows.Forms
@@ -84,15 +81,101 @@ if ($result -eq [System.Windows.Forms.DialogResult]::OK){
     $x = $Textbox.Text
     $y = $ListBox1.SelectedItem
 
-try {
-Write-Host "Setting autoreply for " $y
-Set-MailboxAutoReplyConfiguration -identity $y -AutoReplyState Enabled -InternalMessage $x  -ExternalMessage $x
+    ## -- Create The Progress-Bar
+	$ObjForm = New-Object System.Windows.Forms.Form
+	$ObjForm.Text = "Running Task"
+	$ObjForm.Height = 100
+	$ObjForm.Width = 500
+	$ObjForm.BackColor = "White"
+
+	$ObjForm.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedSingle
+	$ObjForm.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
+
+	## -- Create The Label
+	$ObjLabel = New-Object System.Windows.Forms.Label
+	$ObjLabel.Text = "Starting Task. Please wait ... "
+	$ObjLabel.Left = 5
+	$ObjLabel.Top = 10
+	$ObjLabel.Width = 500 - 20
+	$ObjLabel.Height = 15
+	$ObjLabel.Font = "Tahoma"
+	## -- Add the label to the Form
+	$ObjForm.Controls.Add($ObjLabel)
+
+	$PB = New-Object System.Windows.Forms.ProgressBar
+	$PB.Name = "PowerShellProgressBar"
+    $PB.Value = 10
+	$PB.Style = Continuous
+    
+
+	$System_Drawing_Size = New-Object System.Drawing.Size
+	$System_Drawing_Size.Width = 500 - 40
+	$System_Drawing_Size.Height = 20
+	$PB.Size = $System_Drawing_Size
+	$PB.Left = 5
+	$PB.Top = 40
+	$ObjForm.Controls.Add($PB)
+
+	## -- Show the Progress-Bar and Start The PowerShell Script
+	$ObjForm.Show() | Out-Null
+	$ObjForm.Focus() | Out-NUll
+	$ObjLabel.Text = "Preparing. Please wait ... "
+	$ObjForm.Refresh()
+
+	Start-Sleep -Milliseconds 300
+    #####
+    $ObjForm.Refresh()
+    $PB.Value = 40
+	$ObjLabel.Text = "Setting Out-of-office reply"
+	Start-Sleep -Milliseconds 300
+
+
+##Set-MailboxAutoReplyConfiguration -identity $y -AutoReplyState Enabled -InternalMessage $x  -ExternalMessage $x
+$AutoReplyStatus = Get-MailboxAutoReplyConfiguration -Identity "$y"
+
+if ($AutoReplyStatus.AutoReplyState -eq "Enabled") {
+    Add-Content "$logfile" "========OOF STATUS========="
+    Add-Content "$logfile" "$DateTime"
+    Add-Content "$Logfile" "Out-of-Office is already Enabled"
 }
-catch  {
-Write-Host -ForegroundColor Red " An error occured. Please report this bug. (365EnableOOF)"
+elseif ($AutoReplyStatus.AutoReplyState -eq "Disabled") {
+    Set-MailboxAutoReplyConfiguration -identity $y -AutoReplyState Enabled -InternalMessage $x  -ExternalMessage $x
+    Add-Content "$logfile" "========SUCCESS========="
+    Add-Content "$logfile" "$DateTime"
+    Add-Content "$Logfile" "Set Out-of-Office Message"
 
 }
+elseif ($AutoReplyStatus.AutoReplyState -eq "Scheduled") {
+    Add-Content "$logfile" "========OOF STATUS========="
+    Add-Content "$logfile" "$DateTime"
+    Add-Content "$Logfile" "Out-of-Office is already Scheduled"
+}
+else{
+    Add-Content "$logfile" "FAILED OOF STATUS"
+    
+}
 
-write-host -ForegroundColor Green "Completed all Tasks"
+    
+    Start-Sleep -Seconds 3
+
+
+    $ObjForm.Refresh()
+    $PB.Value = 60
+	Start-Sleep -Milliseconds 300
+    
+    $ObjForm.Refresh()
+    $PB.Value = 90
+	Start-Sleep -Milliseconds 300
+    
+    $ObjForm.Refresh()
+    $PB.Value = 95
+    $ObjLabel.Text = "Completed Task"
+	Start-Sleep -Milliseconds 300
+
+    $ObjForm.Refresh()
+    $PB.Value = 100
+	Start-Sleep -Milliseconds 300
+
+$ObjForm.Close()
 
 }

@@ -1,7 +1,8 @@
-﻿write-host 'Check Calendar Access'
-write-host '====================='
-$colourAlert = "Yellow"
-$colourInfo = "Green"
+﻿$logfile = "C:\BWApp\Logs\Log.txt"
+$jobstatus = "C:\Temp\BWApp\JobStatus.txt"
+
+$RunningUser = whoami
+$DateTime = Get-Date
 
 
 Add-Type -AssemblyName System.Windows.Forms
@@ -65,12 +66,96 @@ if ($result -eq [System.Windows.Forms.DialogResult]::OK){
     $x = $ListBox1.SelectedItem
     $y = $mailbox.PrimarySmtpAddress
  
+ ## -- Create The Progress-Bar
+	$ObjForm = New-Object System.Windows.Forms.Form
+	$ObjForm.Text = "Running Task"
+	$ObjForm.Height = 100
+	$ObjForm.Width = 500
+	$ObjForm.BackColor = "White"
+
+	$ObjForm.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedSingle
+	$ObjForm.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
+
+	## -- Create The Label
+	$ObjLabel = New-Object System.Windows.Forms.Label
+	$ObjLabel.Text = "Starting Task. Please wait ... "
+	$ObjLabel.Left = 5
+	$ObjLabel.Top = 10
+	$ObjLabel.Width = 500 - 20
+	$ObjLabel.Height = 15
+	$ObjLabel.Font = "Tahoma"
+	## -- Add the label to the Form
+	$ObjForm.Controls.Add($ObjLabel)
+
+	$PB = New-Object System.Windows.Forms.ProgressBar
+	$PB.Name = "PowerShellProgressBar"
+    $PB.Value = 10
+	$PB.Style = Continuous
+    
+
+	$System_Drawing_Size = New-Object System.Drawing.Size
+	$System_Drawing_Size.Width = 500 - 40
+	$System_Drawing_Size.Height = 20
+	$PB.Size = $System_Drawing_Size
+	$PB.Left = 5
+	$PB.Top = 40
+	$ObjForm.Controls.Add($PB)
+
+	## -- Show the Progress-Bar and Start The PowerShell Script
+	$ObjForm.Show() | Out-Null
+	$ObjForm.Focus() | Out-NUll
+	$ObjLabel.Text = "Preparing Script. Please wait ... "
+	$ObjForm.Refresh()
+
+	Start-Sleep -Milliseconds 300
+    #####
+    $ObjForm.Refresh()
+    $PB.Value = 50
+	$ObjLabel.Text = "Getting Permissions"
+	Start-Sleep -Milliseconds 300
+    
+    $ObjForm.Refresh()
+    $PB.Value = 75
+	$ObjLabel.Text = "Exporting to Logs..."
+	$ObjForm.Refresh()
+	Start-Sleep -Milliseconds 300
+
+Get-MailboxFolderPermission -identity $x':\calendar' | Export-Csv "C:\BWApp\Logs\CalendarPerms.csv"
+
+    Add-Content "$logfile" "========INFO========="
+    Add-Content "$logfile" "$DateTime"
+    Add-Content "$Logfile" "Checked $x's Calendar Permissions."
+
+$ObjForm.Refresh()
+    $PB.Value = 90
+    Start-Sleep -Milliseconds 300
+
+    $ObjForm.Refresh()
+    $PB.Value = 95
+    Start-Sleep -Milliseconds 300
+
+    $ObjForm.Refresh()
+    $PB.Value = 99
+    Start-Sleep -Milliseconds 300
+
+    $ObjForm.Refresh()
+    $PB.Value = 100
+	$ObjLabel.Text = "Task Completed Successfully"
+	Start-Sleep -Milliseconds 300
+    
+    $ObjForm.Refresh()
+    $PB.Value = 100
+    $ObjLabel.Text = "Displaying Results"
+    Start-Sleep -Milliseconds 300
+
+    $ObjForm.Refresh()
+    $PB.Value = 100
+    Start-Sleep -Milliseconds 300
+
+
 Get-MailboxFolderPermission -identity $x':\calendar' | out-gridview
 
-write-host -ForegroundColor Green "Completed all Tasks"
-
-
-
+$ObjForm.Close()
 
 }
 

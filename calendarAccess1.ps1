@@ -1,4 +1,5 @@
-﻿
+﻿$logfile = "C:\BWApp\Logs\Log.txt"
+
 Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()
 $mailboxes = Get-Mailbox |Select-Object PrimarySmtpAddress
@@ -65,7 +66,7 @@ $ListBox3                        = New-Object system.Windows.Forms.ListBox
 $ListBox3.text                   = "listBox"
 $ListBox3.width                  = 175
 $ListBox3.height                 = 260
-@('AvailabilityOnly','Limited Details','Author','Publishing Editor','Owner') | ForEach-Object {[void] $ListBox3.Items.Add($_)}
+@('AvailabilityOnly','Limited Details','Author','PublishingEditor','Owner') | ForEach-Object {[void] $ListBox3.Items.Add($_)}
 $ListBox3.location               = New-Object System.Drawing.Point(595,77)
 
 $permission                      = New-Object system.Windows.Forms.Label
@@ -143,24 +144,51 @@ if ($result -eq [System.Windows.Forms.DialogResult]::OK)
     
     $ObjForm.Refresh()
     $PB.Value = 50
-	$ObjLabel.Text = "Giving $y Full Access to $x's Calendar"
+	$ObjLabel.Text = "Giving $z access to $y on $x's Calendar"
 	$ObjForm.Refresh()
 	Start-Sleep -Milliseconds 300
 
 
+    $permission = Get-MailboxFolderPermission -identity $x':\calendar' -User "$y"
+if($permission -eq $null){
     Add-MailboxFolderPermission $x':\calendar' -User "$y" -AccessRights $z -ErrorAction SilentlyContinue
+    Add-Content "$logfile" "========SUCCESS========="
+    Add-Content "$logfile" "$DateTime"
+    Add-Content "$Logfile" "Gave $z access to $y on $x's Calendar."
+
+}else{
+    Set-MailboxFolderPermission $x':\calendar' -User "$y" -AccessRights $z -ErrorAction SilentlyContinue
+    Add-Content "$logfile" "========INFO========="
+    Add-Content "$logfile" "$DateTime"
+    Add-Content "$Logfile" "$y already had access, so the permissions were updated to $z"
+
+}
+
+
+   $ObjForm.Refresh()
+    $PB.Value = 90
+    Start-Sleep -Milliseconds 300
 
     $ObjForm.Refresh()
     $PB.Value = 95
-	$ObjLabel.Text = "Completed Task"
-	$ObjForm.Refresh()
-	Start-Sleep -Milliseconds 300
+    Start-Sleep -Milliseconds 300
 
     $ObjForm.Refresh()
     $PB.Value = 99
-	$ObjLabel.Text = "Completed Task"
-	$ObjForm.Refresh()
-	Start-Sleep -Seconds 2
+    Start-Sleep -Milliseconds 300
+
+    $ObjForm.Refresh()
+    $PB.Value = 100
+	$ObjLabel.Text = "Task Completed Successfully"
+	Start-Sleep -Milliseconds 300
+    
+    $ObjForm.Refresh()
+    $PB.Value = 100
+    Start-Sleep -Milliseconds 300
+
+    $ObjForm.Refresh()
+    $PB.Value = 100
+    Start-Sleep -Milliseconds 300
 
 
 }
