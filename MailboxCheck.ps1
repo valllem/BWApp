@@ -66,14 +66,92 @@ if ($result -eq [System.Windows.Forms.DialogResult]::OK){
     $x = $ListBox1.SelectedItem
     $y = $mailbox.PrimarySmtpAddress
  
+## -- Create The Progress-Bar
+	$ObjForm = New-Object System.Windows.Forms.Form
+	$ObjForm.Text = "Running Task"
+	$ObjForm.Height = 100
+	$ObjForm.Width = 500
+	$ObjForm.BackColor = "White"
+
+	$ObjForm.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedSingle
+	$ObjForm.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
+
+	## -- Create The Label
+	$ObjLabel = New-Object System.Windows.Forms.Label
+	$ObjLabel.Text = "Starting Task. Please wait ... "
+	$ObjLabel.Left = 5
+	$ObjLabel.Top = 10
+	$ObjLabel.Width = 500 - 20
+	$ObjLabel.Height = 15
+	$ObjLabel.Font = "Tahoma"
+	## -- Add the label to the Form
+	$ObjForm.Controls.Add($ObjLabel)
+
+	$PB = New-Object System.Windows.Forms.ProgressBar
+	$PB.Name = "PowerShellProgressBar"
+	$PB.Value = 10
+	$PB.Style="Continuous"
+
+	$System_Drawing_Size = New-Object System.Drawing.Size
+	$System_Drawing_Size.Width = 500 - 40
+	$System_Drawing_Size.Height = 20
+	$PB.Size = $System_Drawing_Size
+	$PB.Left = 5
+	$PB.Top = 40
+	$ObjForm.Controls.Add($PB)
+
+	## -- Show the Progress-Bar and Start The PowerShell Script
+	$ObjForm.Show() | Out-Null
+	$ObjForm.Focus() | Out-NUll
+	$ObjLabel.Text = "Preparing Script. Please wait ... "
+	$ObjForm.Refresh()
+
+	Start-Sleep -Milliseconds 300
+#####
+    $ObjForm.Refresh()
+    $PB.Value = 50
+	$ObjLabel.Text = "Checking Permissions"
+	Start-Sleep -Milliseconds 300
+    
+    
 $results = Get-MailboxPermission -identity $x
-$results | Where-Object { ($_.accessRights -like "*") -and -not ($_.User -like "NT AUTHORITY\SELF") -and -not ($_.User -like "*\Domain Admins")-and -not ($_.User -like "*\Organisations-Admins") -and -not ($_.User -like "*\Organization Management") -and -not ($_.User -like "*\Administrator") -and -not ($_.User -like "*\Exchange Servers") -and -not ($_.User -like "*\Exchange Trusted Subsystem") -and -not ($_.User -like "*\Enterprise Admins") -and -not ($_.User -like "*\system")} | out-gridview
+
+    $ObjForm.Refresh()
+    $PB.Value = 75
+	$ObjLabel.Text = "Exporting permissions to CSV"
+	$ObjForm.Refresh()
+	Start-Sleep -Milliseconds 300
+
 $results | Where-Object { ($_.accessRights -like "*") -and -not ($_.User -like "NT AUTHORITY\SELF") -and -not ($_.User -like "*\Domain Admins")-and -not ($_.User -like "*\Organisations-Admins") -and -not ($_.User -like "*\Organization Management") -and -not ($_.User -like "*\Administrator") -and -not ($_.User -like "*\Exchange Servers") -and -not ($_.User -like "*\Exchange Trusted Subsystem") -and -not ($_.User -like "*\Enterprise Admins") -and -not ($_.User -like "*\system")} | Export-Csv "$FilePath\MailboxPerms.csv"
-Invoke-Item "$FilePath\MailboxPerms.csv"
-write-host -ForegroundColor Green "Completed all Tasks"
+
+    $ObjForm.Refresh()
+    $PB.Value = 95
+	$ObjLabel.Text = "Generating searchable permissions table"
+	$ObjForm.Refresh()
+	Start-Sleep -Milliseconds 300
+
+    $ObjForm.Refresh()
+    $PB.Value = 100
+	$ObjLabel.Text = "Completed Tasks..."
+	$ObjForm.Refresh()
+	Start-Sleep -Milliseconds 300
+
+$results | Where-Object { ($_.accessRights -like "*") -and -not ($_.User -like "NT AUTHORITY\SELF") -and -not ($_.User -like "*\Domain Admins")-and -not ($_.User -like "*\Organisations-Admins") -and -not ($_.User -like "*\Organization Management") -and -not ($_.User -like "*\Administrator") -and -not ($_.User -like "*\Exchange Servers") -and -not ($_.User -like "*\Exchange Trusted Subsystem") -and -not ($_.User -like "*\Enterprise Admins") -and -not ($_.User -like "*\system")} | out-gridview
+
+    $ObjForm.Refresh()
+    $PB.Value = 100
+	$ObjLabel.Text = "Completed Tasks..."
+	$ObjForm.Refresh()
+	Start-Sleep -Milliseconds 300
+
+    $ObjForm.Refresh()
+    $PB.Value = 100
+	$ObjLabel.Text = "Completed Tasks..."
+	$ObjForm.Refresh()
+	Start-Sleep -Milliseconds 300
 
 
-
+    $ObjForm.Close()
 
 }
 
