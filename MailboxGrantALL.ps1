@@ -150,7 +150,7 @@ if ($z -eq "Yes") {
     Add-Content "$logfile" "====================="
     Add-Content "$logfile" "$DateTime"
     Add-Content "$Logfile" "$RunningUser"
-    Add-Content "$logfile" "Added $x Full Access to $y's mailbox"
+    Add-Content "$logfile" "Added $x Full Access to $($mailbox.primarysmtpaddress)'s mailbox"
 
 } elseif ($z -eq "No") {
     
@@ -158,10 +158,10 @@ if ($z -eq "Yes") {
     Remove-MailboxPermission -Identity $y -User "$x" -AccessRights FullAccess -Confirm:$false -ErrorAction SilentlyContinue
     Add-MailboxPermission -Identity $y -User "$x" -AccessRights FullAccess -AutoMapping $false
 
-    Add-Content "$logfile" "====================="
+    Add-Content "$logfile" "======MAILBOX======"
     Add-Content "$logfile" "$DateTime"
     Add-Content "$Logfile" "$RunningUser"
-    Add-Content "$logfile" "Added $x Full Access to $y's mailbox"
+    Add-Content "$logfile" "Added $x to $($mailbox.primarysmtpaddress)'s mailbox"
 
 } else {
 

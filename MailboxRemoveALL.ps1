@@ -134,7 +134,7 @@ foreach ($mailbox in $mailboxes) {
     Add-Content "$logfile" "====================="
     Add-Content "$logfile" "$DateTime"
     Add-Content "$Logfile" "$RunningUser"
-    Add-Content "$logfile" "Removed $x Full Access to $y's mailbox"  
+    Add-Content "$logfile" "Removed $x Full Access to $($mailbox.primarysmtpaddress) mailbox"  
 
 }
 
