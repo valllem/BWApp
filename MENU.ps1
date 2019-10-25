@@ -411,7 +411,17 @@ $LabelLogs.location              = New-Object System.Drawing.Point(40,696)
 $LabelLogs.Font                  = 'Microsoft Sans Serif,10,style=Bold'
 $LabelLogs.ForeColor             = "#9013fe"
 
-$BWApp.controls.AddRange(@($ButtonCalendarAccess1,$ButtonGiveAccessAll,$ButtonRemoveAccess,$ButtonCheckAccess,$ButtonFullAccess1,$ButtonRemoveFull,$ButtonSendAs,$ButtonForward,$ButtonFullAll,$ButtonRemoveAll,$ButtonCheckLogs,$ButtonRenameUPN,$ButtonRenameUser,$ButtonDisableUser,$ButtonEnableUser,$ButtonBlockEmail,$ButtonBlockDomain,$ButtonPrepareTenancy,$ButtonEnableAuditLog,$LabelClickInstallPowershell,$LabelWiki,$LabelSignOutClose,$ButtonAllDistMembers,$ButtonAllPerms,$ButtonEnableOOF,$ButtonDisableOOF,$GroupBoxMenu,$ButtonAllForwards,$GroupboxMailBox,$GroupboxCalendar,$GroupboxUsers,$GroupboxSecurity,$CheckMailboxPerms,$LabelCustomCommand,$LabelLogs))
+
+$LabelReport                     = New-Object system.Windows.Forms.Label
+$LabelReport.text                = "Generate 365 Report"
+$LabelReport.AutoSize            = $true
+$LabelReport.width               = 25
+$LabelReport.height              = 10
+$LabelReport.location            = New-Object System.Drawing.Point(212,696)
+$LabelReport.Font                = 'Microsoft Sans Serif,10,style=Bold'
+$LabelReport.ForeColor           = "#f5a623"
+
+$BWApp.controls.AddRange(@($ButtonCalendarAccess1,$ButtonGiveAccessAll,$ButtonRemoveAccess,$ButtonCheckAccess,$ButtonFullAccess1,$ButtonRemoveFull,$ButtonSendAs,$ButtonForward,$ButtonFullAll,$ButtonRemoveAll,$ButtonCheckLogs,$ButtonRenameUPN,$ButtonRenameUser,$ButtonDisableUser,$ButtonEnableUser,$ButtonBlockEmail,$ButtonBlockDomain,$ButtonPrepareTenancy,$ButtonEnableAuditLog,$LabelClickInstallPowershell,$LabelWiki,$LabelSignOutClose,$ButtonAllDistMembers,$ButtonAllPerms,$ButtonEnableOOF,$ButtonDisableOOF,$GroupBoxMenu,$ButtonAllForwards,$GroupboxMailBox,$GroupboxCalendar,$GroupboxUsers,$GroupboxSecurity,$CheckMailboxPerms,$LabelCustomCommand,$LabelLogs,$LabelReport))
 
 $ButtonFullAccess1.Add_Click({.\MailboxGrantFull.ps1})
 $ButtonRemoveFull.Add_Click({.\MailboxRemoveFull.ps1})
@@ -443,5 +453,6 @@ $ButtonAllForwards.Add_Click({.\AllForwards.ps1})
 $CheckMailboxPerms.Add_Click({.\MailboxCheck.ps1})
 $LabelCustomCommand.Add_Click({.\CustomCommand.ps1})
 $LabelLogs.Add_Click({ii C:\BWApp\Logs\})
+$LabelReport.Add_Click({.\Report.ps1})
 
 $result = $BWApp.ShowDialog()
