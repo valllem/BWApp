@@ -10,6 +10,11 @@ if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 }
 ###################
 
+    Install-Module -Name ReportHTML
+    Add-Content "$logfile" "====================="
+    Add-Content "$logfile" "$DateTime"
+    Add-Content "$Logfile" "$RunningUser Installed ReportHTML Module"
+
 ## HIDE THE CONSOLE WINDOW BEFORE GUI LAUNCHES ##
 Add-Type -Name Window -Namespace Console -MemberDefinition '
 [DllImport("Kernel32.dll")]
@@ -140,7 +145,7 @@ $ObjForm.Close()
 ## LOAD MAIN FORM ##
 
 $BWApp                           = New-Object system.Windows.Forms.Form
-$BWApp.ClientSize                = '530,722'
+$BWApp.ClientSize                = '560,722'
 $BWApp.text                      = "BWApp - Main Menu"
 $BWApp.TopMost                   = $false
 

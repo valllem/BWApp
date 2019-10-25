@@ -29,10 +29,7 @@ else
     
 }
 
-    Install-Module -Name ReportHTML
-    Add-Content "$logfile" "====================="
-    Add-Content "$logfile" "$DateTime"
-    Add-Content "$Logfile" "$RunningUser Installed ReportHTML Module"
+   
 
 
 ##End of log tidy up
