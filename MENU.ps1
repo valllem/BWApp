@@ -397,7 +397,7 @@ $LabelCustomCommand.text         = "Run Custom Command"
 $LabelCustomCommand.AutoSize     = $true
 $LabelCustomCommand.width        = 25
 $LabelCustomCommand.height       = 10
-$LabelCustomCommand.location     = New-Object System.Drawing.Point(304,696)
+$LabelCustomCommand.location     = New-Object System.Drawing.Point(400,696)
 $LabelCustomCommand.Font         = 'Microsoft Sans Serif,10,style=Bold'
 $LabelCustomCommand.ForeColor    = "#9013fe"
 
