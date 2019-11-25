@@ -9,22 +9,29 @@ if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
  }
 }
 ###################
+$BinConsole = "C:\BWApp\Bin\settings_console.dll"
+$GetBinConsole = Get-Content $BinConsole
 
-    Install-Module -Name ReportHTML
-    Add-Content "$logfile" "====================="
-    Add-Content "$logfile" "$DateTime"
-    Add-Content "$Logfile" "$RunningUser Installed ReportHTML Module"
+#Checks
+if ($GetBinConsole -like 'Enabled'){
+                                    $ShowConsole = 1
+                                    write-host 'Console Window Enabled'
+                                    }
+if ($GetBinConsole -like 'Disabled'){
+                                    ## HIDE THE CONSOLE WINDOW BEFORE GUI LAUNCHES ##
+                                    Add-Type -Name Window -Namespace Console -MemberDefinition '
+                                    [DllImport("Kernel32.dll")]
+                                    public static extern IntPtr GetConsoleWindow();
+                                    [DllImport("user32.dll")]
+                                    public static extern bool ShowWindow(IntPtr hWnd, Int32 nCmdShow);
+                                    '
+                                    $consolePtr = [Console.Window]::GetConsoleWindow()
+                                    [Console.Window]::ShowWindow($consolePtr, $ShowConsole)
+                                    ##################
+                                    }
+    
 
-## HIDE THE CONSOLE WINDOW BEFORE GUI LAUNCHES ##
-Add-Type -Name Window -Namespace Console -MemberDefinition '
-[DllImport("Kernel32.dll")]
-public static extern IntPtr GetConsoleWindow();
-[DllImport("user32.dll")]
-public static extern bool ShowWindow(IntPtr hWnd, Int32 nCmdShow);
-'
-$consolePtr = [Console.Window]::GetConsoleWindow()
-[Console.Window]::ShowWindow($consolePtr, 0)
-##################
+
 
 ## ENABLE THE GUI ##
 Add-Type -AssemblyName System.Windows.Forms
@@ -145,10 +152,9 @@ $ObjForm.Close()
 ## LOAD MAIN FORM ##
 
 $BWApp                           = New-Object system.Windows.Forms.Form
-$BWApp.ClientSize                = '560,722'
+$BWApp.ClientSize                = '573,722'
 $BWApp.text                      = "BWApp - Main Menu"
 $BWApp.TopMost                   = $false
-
 
 $ButtonCalendarAccess1           = New-Object system.Windows.Forms.Button
 $ButtonCalendarAccess1.text      = "Give Access"
@@ -300,14 +306,14 @@ $LabelClickInstallPowershell.AutoSize  = $true
 $LabelClickInstallPowershell.width  = 25
 $LabelClickInstallPowershell.height  = 10
 $LabelClickInstallPowershell.location  = New-Object System.Drawing.Point(24,28)
-$LabelClickInstallPowershell.Font  = 'Microsoft Sans Serif,10'
+$LabelClickInstallPowershell.Font  = 'Microsoft Sans Serif,10,style=Bold'
 
 $LabelWiki                       = New-Object system.Windows.Forms.Label
 $LabelWiki.text                  = "HELP WIKI"
 $LabelWiki.AutoSize              = $true
 $LabelWiki.width                 = 25
 $LabelWiki.height                = 10
-$LabelWiki.location              = New-Object System.Drawing.Point(213,28)
+$LabelWiki.location              = New-Object System.Drawing.Point(329,28)
 $LabelWiki.Font                  = 'Microsoft Sans Serif,10,style=Bold'
 $LabelWiki.ForeColor             = "#f5a623"
 
@@ -316,7 +322,7 @@ $LabelSignOutClose.text          = "Sign Out & Exit"
 $LabelSignOutClose.AutoSize      = $true
 $LabelSignOutClose.width         = 25
 $LabelSignOutClose.height        = 10
-$LabelSignOutClose.location      = New-Object System.Drawing.Point(370,28)
+$LabelSignOutClose.location      = New-Object System.Drawing.Point(447,28)
 $LabelSignOutClose.Font          = 'Microsoft Sans Serif,10,style=Bold'
 $LabelSignOutClose.ForeColor     = "#d0021b"
 
@@ -356,7 +362,7 @@ $GroupBoxMenu                    = New-Object system.Windows.Forms.Groupbox
 $GroupBoxMenu.height             = 35
 $GroupBoxMenu.width              = 464
 $GroupBoxMenu.text               = "Options"
-$GroupBoxMenu.location           = New-Object System.Drawing.Point(9,15)
+$GroupBoxMenu.location           = New-Object System.Drawing.Point(9,-18)
 
 $ButtonAllForwards               = New-Object system.Windows.Forms.Button
 $ButtonAllForwards.text          = "All Mail Forwarding"
@@ -392,7 +398,7 @@ $GroupboxSecurity.location       = New-Object System.Drawing.Point(9,499)
 
 $CheckMailboxPerms               = New-Object system.Windows.Forms.Button
 $CheckMailboxPerms.text          = "Check Mailbox Perms"
-$CheckMailboxPerms.width         = 196
+$CheckMailboxPerms.width         = 138
 $CheckMailboxPerms.height        = 30
 $CheckMailboxPerms.location      = New-Object System.Drawing.Point(328,208)
 $CheckMailboxPerms.Font          = 'Microsoft Sans Serif,10'
@@ -406,7 +412,6 @@ $LabelCustomCommand.location     = New-Object System.Drawing.Point(400,696)
 $LabelCustomCommand.Font         = 'Microsoft Sans Serif,10,style=Bold'
 $LabelCustomCommand.ForeColor    = "#9013fe"
 
-
 $LabelLogs                       = New-Object system.Windows.Forms.Label
 $LabelLogs.text                  = "Open Log Folder"
 $LabelLogs.AutoSize              = $true
@@ -415,7 +420,6 @@ $LabelLogs.height                = 10
 $LabelLogs.location              = New-Object System.Drawing.Point(40,696)
 $LabelLogs.Font                  = 'Microsoft Sans Serif,10,style=Bold'
 $LabelLogs.ForeColor             = "#9013fe"
-
 
 $LabelReport                     = New-Object system.Windows.Forms.Label
 $LabelReport.text                = "Generate 365 Report"
@@ -426,7 +430,15 @@ $LabelReport.location            = New-Object System.Drawing.Point(212,696)
 $LabelReport.Font                = 'Microsoft Sans Serif,10,style=Bold'
 $LabelReport.ForeColor           = "#f5a623"
 
-$BWApp.controls.AddRange(@($ButtonCalendarAccess1,$ButtonGiveAccessAll,$ButtonRemoveAccess,$ButtonCheckAccess,$ButtonFullAccess1,$ButtonRemoveFull,$ButtonSendAs,$ButtonForward,$ButtonFullAll,$ButtonRemoveAll,$ButtonCheckLogs,$ButtonRenameUPN,$ButtonRenameUser,$ButtonDisableUser,$ButtonEnableUser,$ButtonBlockEmail,$ButtonBlockDomain,$ButtonPrepareTenancy,$ButtonEnableAuditLog,$LabelClickInstallPowershell,$LabelWiki,$LabelSignOutClose,$ButtonAllDistMembers,$ButtonAllPerms,$ButtonEnableOOF,$ButtonDisableOOF,$GroupBoxMenu,$ButtonAllForwards,$GroupboxMailBox,$GroupboxCalendar,$GroupboxUsers,$GroupboxSecurity,$CheckMailboxPerms,$LabelCustomCommand,$LabelLogs,$LabelReport))
+$LabelSettings                   = New-Object system.Windows.Forms.Label
+$LabelSettings.text              = "Settings"
+$LabelSettings.AutoSize          = $true
+$LabelSettings.width             = 25
+$LabelSettings.height            = 10
+$LabelSettings.location          = New-Object System.Drawing.Point(202,28)
+$LabelSettings.Font              = 'Microsoft Sans Serif,10,style=Bold'
+
+$BWApp.controls.AddRange(@($ButtonCalendarAccess1,$ButtonGiveAccessAll,$ButtonRemoveAccess,$ButtonCheckAccess,$ButtonFullAccess1,$ButtonRemoveFull,$ButtonSendAs,$ButtonForward,$ButtonFullAll,$ButtonRemoveAll,$ButtonCheckLogs,$ButtonRenameUPN,$ButtonRenameUser,$ButtonDisableUser,$ButtonEnableUser,$ButtonBlockEmail,$ButtonBlockDomain,$ButtonPrepareTenancy,$ButtonEnableAuditLog,$LabelClickInstallPowershell,$LabelWiki,$LabelSignOutClose,$ButtonAllDistMembers,$ButtonAllPerms,$ButtonEnableOOF,$ButtonDisableOOF,$GroupBoxMenu,$ButtonAllForwards,$GroupboxMailBox,$GroupboxCalendar,$GroupboxUsers,$GroupboxSecurity,$CheckMailboxPerms,$LabelCustomCommand,$LabelLogs,$LabelReport,$LabelSettings))
 
 $ButtonFullAccess1.Add_Click({.\MailboxGrantFull.ps1})
 $ButtonRemoveFull.Add_Click({.\MailboxRemoveFull.ps1})
@@ -459,5 +471,6 @@ $CheckMailboxPerms.Add_Click({.\MailboxCheck.ps1})
 $LabelCustomCommand.Add_Click({.\CustomCommand.ps1})
 $LabelLogs.Add_Click({ii C:\BWApp\Logs\})
 $LabelReport.Add_Click({.\Report.ps1})
+$LabelSettings.Add_Click({.\Settings.ps1})
 
 $result = $BWApp.ShowDialog()
