@@ -468,7 +468,15 @@ $ButtonAllDistMembers.Add_Click({.\Get-All-DistMembers.ps1})
 $ButtonAllPerms.Add_Click({.\Get-All-Perms.ps1})
 $ButtonAllForwards.Add_Click({.\AllForwards.ps1})
 $CheckMailboxPerms.Add_Click({.\MailboxCheck.ps1})
-$LabelCustomCommand.Add_Click({.\CustomCommand.ps1})
+$LabelCustomCommand.Add_Click({
+$pi = New-Object system.Diagnostics.ProcessStartInfo
+$pi.FileName = "powershell.exe"
+$pi.Arguments = "-NoExit -noprofile -command C:\BWApp\BWApp-master\Blank365Connection.ps1"
+[system.Diagnostics.Process]::Start($pi)
+
+})
+
+
 $LabelLogs.Add_Click({ii C:\BWApp\Logs\})
 $LabelReport.Add_Click({.\Report.ps1})
 $LabelSettings.Add_Click({.\Settings.ps1})
