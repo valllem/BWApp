@@ -1,4 +1,5 @@
-﻿$BinConsole = "C:\BWApp\Bin\settings_console.dll"
+﻿
+$BinConsole = "C:\BWApp\Bin\settings_console.dll"
 $GetBinConsole = Get-Content $BinConsole
 Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()
@@ -37,10 +38,7 @@ if ($GetBinConsole -like 'Disabled'){$CheckBoxShowConsole.checked = $false}
 
 
 $ButtonApply.Add_Click({
-
-    $resultCheckBoxShowConsole = Get-Content $Bin
-     
-    if ($CheckBoxShowConsole.Checked){
+if ($CheckBoxShowConsole.Checked){
     Set-Content $BinConsole "Enabled" #default: Disabled = Do not show the console window
     write-host 'Console Window Enabled'
     }
@@ -50,7 +48,7 @@ $ButtonApply.Add_Click({
     }
     $ProgressBar1.Refresh()
     $ProgressBar1.Value = 100
-    $LabelBarProgress.Text = 'Complete!'
+    
     Start-Sleep -milliseconds 500
 
 

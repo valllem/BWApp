@@ -29,7 +29,21 @@ else
     
 }
 
-   
+
+if (Test-Path -Path C:\BWApp\Bin\settings_console.dll) 
+    {
+    Add-Content "$logfile" "====================="
+    Add-Content "$logfile" "$DateTime"
+    Add-Content "$Logfile" "Console Settings file exists, continuing"
+    }
+else 
+    {
+    New-Item -ItemType Directory -Force -Path C:\BWApp\Bin
+    Set-Content "C:\BWApp\Bin\settings_console.dll" "Disabled"
+    Add-Content "$logfile" "====================="
+    Add-Content "$logfile" "$DateTime"
+    Add-Content "$Logfile" "Created Console Settings file, Console DISABLED by default"
+    }   
 
 
 ##End of log tidy up
