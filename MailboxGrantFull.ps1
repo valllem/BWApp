@@ -1,237 +1,292 @@
-﻿$logfile = "C:\BWApp\logs\Log.txt"
+﻿$logfile = "C:\BWApp\Logs\Log.txt"
+$mailboxes = Get-Mailbox |Select-Object PrimarySmtpAddress
 
 Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()
-try {
-$mailboxes = Get-Mailbox |Select-Object PrimarySmtpAddress
-}
 
-catch {
-write-host -ForegroundColor Red "NOT LOGGED IN. Please select 'switch account' on the main menu "
-}
-$calendarAccess1                 = New-Object system.Windows.Forms.Form
-$calendarAccess1.ClientSize      = '800,420'
-$calendarAccess1.text            = "Give Mailbox Access"
-$calendarAccess1.TopMost         = $false
-$calendarAccess1.StartPosition = 'CenterScreen'
+$Form                            = New-Object system.Windows.Forms.Form
+$Form.ClientSize                 = '500,648'
+$Form.text                       = "Grant User Full Access to 1 Mailbox"
+$Form.TopMost                    = $false
 
-$ListBox1                        = New-Object system.Windows.Forms.ListBox
-$ListBox1.text                   = "listBox"
-$ListBox1.width                  = 169
-$ListBox1.height                 = 258
-$ListBox1.location               = New-Object System.Drawing.Point(38,77)
-foreach ($mailbox in $mailboxes) {[void] $ListBox1.Items.Add($mailbox.PrimarySmtpAddress)}
+$LabelUserGainingAccess          = New-Object system.Windows.Forms.Label
+$LabelUserGainingAccess.text     = "User Gaining Access"
+$LabelUserGainingAccess.AutoSize  = $true
+$LabelUserGainingAccess.width    = 25
+$LabelUserGainingAccess.height   = 10
+$LabelUserGainingAccess.location  = New-Object System.Drawing.Point(262,49)
+$LabelUserGainingAccess.Font     = 'Microsoft Sans Serif,10,style=Bold'
+$LabelUserGainingAccess.ForeColor  = "#000000"
 
-$ListBox2                        = New-Object system.Windows.Forms.ListBox
-$ListBox2.text                   = "listBox"
-$ListBox2.width                  = 166
-$ListBox2.height                 = 258
-$ListBox2.location               = New-Object System.Drawing.Point(327,77)
-foreach ($mailbox in $mailboxes) {[void] $ListBox2.Items.Add($mailbox.PrimarySmtpAddress)}
+$ListBoxUserGainingAccess        = New-Object system.Windows.Forms.ListBox
+$ListBoxUserGainingAccess.text   = "User Gaining Access"
+$ListBoxUserGainingAccess.width  = 216
+$ListBoxUserGainingAccess.height  = 362
+$ListBoxUserGainingAccess.location  = New-Object System.Drawing.Point(262,81)
+foreach ($mailbox in $mailboxes) {[void] $ListBoxUserGainingAccess.Items.Add($mailbox.PrimarySmtpAddress)}
 
-$Button1                         = New-Object system.Windows.Forms.Button
-$Button1.text                    = "OK"
-$Button1.width                   = 60
-$Button1.height                  = 30
-$Button1.location                = New-Object System.Drawing.Point(280,372)
-$Button1.Font                    = 'Microsoft Sans Serif,10'
-$Button1.DialogResult = [System.Windows.Forms.DialogResult]::OK
-$calendarAccess1.AcceptButton = $Button1
-$calendarAccess1.Controls.Add($Button1)
+$CheckBoxAddToOutlook            = New-Object system.Windows.Forms.CheckBox
+$CheckBoxAddToOutlook.text       = "Add Mailbox to Outlook?"
+$CheckBoxAddToOutlook.AutoSize   = $false
+$CheckBoxAddToOutlook.width      = 194
+$CheckBoxAddToOutlook.height     = 20
+$CheckBoxAddToOutlook.location   = New-Object System.Drawing.Point(19,472)
+$CheckBoxAddToOutlook.Font       = 'Microsoft Sans Serif,10,style=Bold'
 
-$Button2                         = New-Object system.Windows.Forms.Button
-$Button2.text                    = "Cancel"
-$Button2.width                   = 60
-$Button2.height                  = 30
-$Button2.location                = New-Object System.Drawing.Point(208,373)
-$Button2.Font                    = 'Microsoft Sans Serif,10'
-$Button2.DialogResult = [System.Windows.Forms.DialogResult]::Cancel
-$calendarAccess1.CancelButton = $Button2
-$calendarAccess1.Controls.Add($Button2)
+$ButtonRunScript                 = New-Object system.Windows.Forms.Button
+$ButtonRunScript.BackColor       = "#7ed321"
+$ButtonRunScript.text            = "Run Script"
+$ButtonRunScript.width           = 397
+$ButtonRunScript.height          = 30
+$ButtonRunScript.location        = New-Object System.Drawing.Point(44,509)
+$ButtonRunScript.Font            = 'Microsoft Sans Serif,10,style=Bold'
 
-$Identity                        = New-Object system.Windows.Forms.Label
-$Identity.text                   = "Account to Access"
-$Identity.AutoSize               = $true
-$Identity.width                  = 25
-$Identity.height                 = 10
-$Identity.location               = New-Object System.Drawing.Point(62,49)
-$Identity.Font                   = 'Microsoft Sans Serif,10'
-$calendarAccess1.Controls.Add($Identity)
+$ProgressBar1                    = New-Object system.Windows.Forms.ProgressBar
+$ProgressBar1.width              = 398
+$ProgressBar1.height             = 60
+$ProgressBar1.location           = New-Object System.Drawing.Point(44,546)
 
-$User                            = New-Object system.Windows.Forms.Label
-$User.text                       = "Person Getting Access"
-$User.AutoSize                   = $true
-$User.width                      = 25
-$User.height                     = 10
-$User.location                   = New-Object System.Drawing.Point(340,49)
-$User.Font                       = 'Microsoft Sans Serif,10'
-$calendarAccess1.Controls.Add($User)
+$LabelStatus                     = New-Object system.Windows.Forms.Label
+$LabelStatus.text                = "Status: Ready"
+$LabelStatus.AutoSize            = $true
+$LabelStatus.width               = 25
+$LabelStatus.height              = 10
+$LabelStatus.location            = New-Object System.Drawing.Point(19,616)
+$LabelStatus.Font                = 'Microsoft Sans Serif,10'
 
-$ListBox3                        = New-Object system.Windows.Forms.ListBox
-$ListBox3.text                   = "listBox"
-$ListBox3.width                  = 175
-$ListBox3.height                 = 260
-@("Yes","No") | ForEach-Object {[void] $ListBox3.Items.Add($_)}
-$ListBox3.location               = New-Object System.Drawing.Point(595,77)
+$ListBoxMailboxToManage          = New-Object system.Windows.Forms.ListBox
+$ListBoxMailboxToManage.text     = "Mailbox to Manage"
+$ListBoxMailboxToManage.width    = 218
+$ListBoxMailboxToManage.height   = 362
+$ListBoxMailboxToManage.location  = New-Object System.Drawing.Point(19,81)
+foreach ($mailbox in $mailboxes) {[void] $ListBoxMailboxToManage.Items.Add($mailbox.PrimarySmtpAddress)}
 
-$permission                      = New-Object system.Windows.Forms.Label
-$permission.text                 = "Add to Outlook?"
-$permission.AutoSize             = $true
-$permission.width                = 25
-$permission.height               = 10
-$permission.location             = New-Object System.Drawing.Point(623,49)
-$permission.Font                 = 'Microsoft Sans Serif,10'
+$LabelMailboxToManage            = New-Object system.Windows.Forms.Label
+$LabelMailboxToManage.text       = "Mailbox to Manage"
+$LabelMailboxToManage.AutoSize   = $true
+$LabelMailboxToManage.width      = 25
+$LabelMailboxToManage.height     = 10
+$LabelMailboxToManage.location   = New-Object System.Drawing.Point(19,49)
+$LabelMailboxToManage.Font       = 'Microsoft Sans Serif,10,style=Bold'
 
-$calendarAccess1.controls.AddRange(@($ListBox1,$ListBox2,$Button1,$Button2,$Identity,$User,$ListBox3,$permission))
+$CheckBoxGiveSendAs              = New-Object system.Windows.Forms.CheckBox
+$CheckBoxGiveSendAs.text         = "Give Send As Permission?"
+$CheckBoxGiveSendAs.AutoSize     = $false
+$CheckBoxGiveSendAs.width        = 202
+$CheckBoxGiveSendAs.height       = 20
+$CheckBoxGiveSendAs.location     = New-Object System.Drawing.Point(262,472)
+$CheckBoxGiveSendAs.Font         = 'Microsoft Sans Serif,10,style=Bold'
 
-$calendarAccess1.Controls.Add($ListBox1)
-$calendarAccess1.Controls.Add($ListBox2)
-$calendarAccess1.Controls.Add($ListBox3)
+$Form.controls.AddRange(@($LabelUserGainingAccess,$ListBoxUserGainingAccess,$CheckBoxAddToOutlook,$ButtonRunScript,$ProgressBar1,$LabelStatus,$ListBoxMailboxToManage,$LabelMailboxToManage,$CheckBoxGiveSendAs))
 
+$ButtonRunScript.Add_Click({
 
-$calendarAccess1.Topmost = $true
+    $ProgressBar1.Value = 25
+    $LabelStatus.Text = "Starting..."
 
+    $mailbox = $ListBoxMailboxToManage.SelectedItem
+    $userRequiringAccess = $ListBoxUserGainingAccess.SelectedItem
 
-$result = $calendarAccess1.ShowDialog()
+if ($CheckBoxAddToOutlook.Checked -and $CheckBoxGiveSendAs.Checked) {
 
-if ($result -eq [System.Windows.Forms.DialogResult]::OK){
-    $x = $ListBox1.SelectedItem
-    $y = $ListBox2.SelectedItem
-    $z = $ListBox3.SelectedItem
-#####
-## -- Create The Progress-Bar
-	$ObjForm = New-Object System.Windows.Forms.Form
-	$ObjForm.Text = "Running Task"
-	$ObjForm.Height = 100
-	$ObjForm.Width = 500
-	$ObjForm.BackColor = "White"
+    $accessRight = "FullAccess"
+ 
+    $mailboxes = Get-mailbox
+    $userRequiringAccess = $ListBoxUserGainingAccess.SelectedItem
 
-	$ObjForm.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedSingle
-	$ObjForm.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
+    $accessRights = $null
+    $accessRights = Get-MailboxPermission "$($mailbox.primarysmtpaddress)" -User $userRequiringAccess -erroraction SilentlyContinue
+    
+    $ProgressBar1.Value = 25
+    $LabelStatus.Text = " "
 
-	## -- Create The Label
-	$ObjLabel = New-Object System.Windows.Forms.Label
-	$ObjLabel.Text = "Starting Task. Please wait ... "
-	$ObjLabel.Left = 5
-	$ObjLabel.Top = 10
-	$ObjLabel.Width = 500 - 20
-	$ObjLabel.Height = 15
-	$ObjLabel.Font = "Tahoma"
-	## -- Add the label to the Form
-	$ObjForm.Controls.Add($ObjLabel)
+     
+    if ($accessRights.accessRights -eq "FullAccess") {
+        Write-Host "Automapping ON, Full Access and SendAs" -foregroundColor Cyan
+        Write-Host "$userRequiringAccess already has $accessRight on $mailbox" -ForegroundColor Green
 
-	$PB = New-Object System.Windows.Forms.ProgressBar
-	$PB.Name = "PowerShellProgressBar"
-	$PB.Value = 10
-	$PB.Style="Continuous"
+        Add-Content "$logfile" "$userRequiringAccess already has $accessRight on $mailbox"
+        
+        $ProgressBar1.Value = 50
+        $LabelStatus.Text = "$userRequiringAccess already has $accessRight on $mailbox"
+       
+    } #close if
+elseif($accessRights.accessRights -ne "FullAccess"){
+        Write-Host "Automapping ON, Full Access and SendAs" -foregroundColor Cyan
+        Write-Host "Adding $userRequiringAccess $accessRight on $mailbox" -foregroundColor Yellow
+        
+        Add-Content "$logfile" "Adding $userRequiringAccess $accessRight on $mailbox"
+        Add-Content "$logfile" "Adding $userRequiringAccess SendAs permission on $mailbox"
 
-	$System_Drawing_Size = New-Object System.Drawing.Size
-	$System_Drawing_Size.Width = 500 - 40
-	$System_Drawing_Size.Height = 20
-	$PB.Size = $System_Drawing_Size
-	$PB.Left = 5
-	$PB.Top = 40
-	$ObjForm.Controls.Add($PB)
+        $ProgressBar1.Value = 50
+        $LabelStatus.Text = "Adding $userRequiringAccess $accessRight on $mailbox"
 
-	## -- Show the Progress-Bar and Start The PowerShell Script
-	$ObjForm.Show() | Out-Null
-	$ObjForm.Focus() | Out-NUll
-	$ObjLabel.Text = "Preparing Script. Please wait ... "
-	$ObjForm.Refresh()
-
-	Start-Sleep -Milliseconds 300
-#####
-    $ObjForm.Refresh()
-    $PB.Value = 25
-	$ObjLabel.Text = "Adjusting Permissions"
-	Start-Sleep -Milliseconds 300
-
-
-if ($z -eq "Yes") {
-
-    $ObjForm.Refresh()
-    $PB.Value = 50
-	$ObjLabel.Text = "Giving $y Full Access to $x"
-	$ObjForm.Refresh()
-	Start-Sleep -Milliseconds 300
-
-    Add-MailboxPermission -Identity $x -User "$y" -AccessRights FullAccess -AutoMapping $true | Out-File -Encoding Ascii -append "$logfile"
-
-    $ObjForm.Refresh()
-    $PB.Value = 75
-	$ObjLabel.Text = "Permissions for $y have been set"
-	$ObjForm.Refresh()
-	Start-Sleep -Milliseconds 300
-
-    $RunningUser = whoami
-    $DateTime = Get-Date
-    Add-Content "$logfile" "====================="
-    Add-Content "$logfile" "$DateTime"
-    Add-Content "$Logfile" "$RunningUser"
-    Add-Content "$logfile" "Added Mailbox perms:"
-    Add-Content "$logfile" "$y has Full Access to $x and will be automatically added to Outlook."
-    
-    
-} elseif ($z -eq "No") {
-
-    $ObjForm.Refresh()
-    $PB.Value = 50
-	$ObjLabel.Text = "Giving $y Full Access to $x"
-	$ObjForm.Refresh()
-	Start-Sleep -Milliseconds 300
-
-    Add-MailboxPermission -Identity $x -User "$y" -AccessRights FullAccess -AutoMapping $false | Out-File -Encoding Ascii -append "$logfile"
-    
-    $ObjForm.Refresh()
-    $PB.Value = 75
-	$ObjLabel.Text = "Permissions for $y have been set"
-	$ObjForm.Refresh()
-	Start-Sleep -Milliseconds 300
-
-    $RunningUser = whoami
-    $DateTime = Get-Date
-    Add-Content "$logfile" "====================="
-    Add-Content "$logfile" "$DateTime"
-    Add-Content "$Logfile" "$RunningUser"
-    Add-Content "$logfile" "Added Mailbox perms:"
-    Add-Content "$logfile" "$y has Full Access to $x"
-
-} else {
-    write-host 'An error occurred. Code: MailboxGrantFull[103-134]'
-    Add-Content "$logfile" "====================="
-    Add-Content "$logfile" "$DateTime"
-    Add-Content "$Logfile" "$RunningUser"
-    Add-Content "$logfile" "FAILED to add Mailbox perms:"
-    
-}
-
-##
-    $ObjForm.Refresh()
-    $PB.Value = 95
-	$ObjLabel.Text = "Completing"
-	$ObjForm.Refresh()
-	Start-Sleep -Milliseconds 300
-##
-
-
-    $ObjForm.Refresh()
-    $PB.Value = 99
-	$ObjLabel.Text = "Tidying up"
-	$ObjForm.Refresh()
-	Start-Sleep -Milliseconds 300
-## Tidy up tasks here
-
-    $ObjForm.Refresh()
-    $PB.Value = 100
-	$ObjLabel.Text = "Completed Tasks"
-	$ObjForm.Refresh()
-
-    
+        Add-MailboxPermission -Identity "$mailbox" -User "$userRequiringAccess" -AccessRights FullAccess -AutoMapping $true | Out-File -Encoding Ascii -append "$logfile"
+        Add-RecipientPermission "$mailbox" -AccessRights SendAs -Trustee "$userRequiringAccess" -Confirm:$false
 
 
 
-Start-Sleep -Seconds 1
-$ObjForm.Close()
-Write-Host "`n"
-exit
-}
+
+    } #close elseif
+else {
+
+        Write-Host "No task completed" -foregroundColor red
+        Add-Content "$logfile" "No task completed"
+        $ProgressBar1.Value = 50
+        $LabelStatus.Text = "No task completed, see log file"
+} #close else
+
+
+
+} #Add to Outlook with SendAs
+elseif ($CheckBoxAddToOutlook.Checked){
+
+    $accessRight = "FullAccess"
+ 
+    $mailboxes = Get-mailbox
+    $userRequiringAccess = $ListBoxUserGainingAccess.SelectedItem
+
+    $accessRights = $null
+    $accessRights = Get-MailboxPermission "$($mailbox.primarysmtpaddress)" -User $userRequiringAccess -erroraction SilentlyContinue
+    
+    $ProgressBar1.Value = 25
+    $LabelStatus.Text = " "
+
+     
+    if ($accessRights.accessRights -eq "FullAccess") {
+        Write-Host "Automapping ON, Full Access Only" -foregroundColor Cyan
+        Write-Host "$userRequiringAccess already has $accessRight on $mailbox" -ForegroundColor Green
+
+        Add-Content "$logfile" "$userRequiringAccess already has $accessRight on $mailbox"
+        
+        $ProgressBar1.Value = 50
+        $LabelStatus.Text = "$userRequiringAccess already has $accessRight on $mailbox"
+       
+    } #close if
+elseif($accessRights.accessRights -ne "FullAccess"){
+        Write-Host "Automapping ON, Full Access" -foregroundColor Cyan
+        Write-Host "Adding $userRequiringAccess $accessRight on $mailbox" -foregroundColor Yellow
+        
+        Add-Content "$logfile" "Adding $userRequiringAccess $accessRight on $mailbox"
+        Add-Content "$logfile" "Adding $userRequiringAccess SendAs permission on $mailbox"
+
+        $ProgressBar1.Value = 50
+        $LabelStatus.Text = "Adding $userRequiringAccess $accessRight on $mailbox"
+        
+        Add-MailboxPermission -Identity "$mailbox" -User "$userRequiringAccess" -AccessRights FullAccess -AutoMapping $true | Out-File -Encoding Ascii -append "$logfile"
+        
+    } #close elseif
+else {
+
+        Write-Host "No task completed" -foregroundColor red
+        Add-Content "$logfile" "No task completed"
+        $ProgressBar1.Value = 50
+        $LabelStatus.Text = "No task completed, see log file"
+} #close else
+} #Add to Outlook
+elseif ($CheckBoxAddToOutlook -and $CheckBoxGiveSendAs.Checked){
+
+    $accessRight = "FullAccess"
+ 
+    $mailboxes = Get-mailbox
+    $userRequiringAccess = $ListBoxUserGainingAccess.SelectedItem
+
+    $accessRights = $null
+    $accessRights = Get-MailboxPermission "$($mailbox.primarysmtpaddress)" -User $userRequiringAccess -erroraction SilentlyContinue
+    
+    $ProgressBar1.Value = 25
+    $LabelStatus.Text = " "
+
+     
+    if ($accessRights.accessRights -eq "FullAccess") {
+        Write-Host "Automapping Off, FullAccess and SendAs" -ForegroundColor Cyan
+        Write-Host "$userRequiringAccess already has $accessRight on $mailbox" -ForegroundColor Green
+        
+        Add-Content "$logfile" "$userRequiringAccess already has $accessRight on $mailbox"
+        
+        $ProgressBar1.Value = 50
+        $LabelStatus.Text = "$userRequiringAccess already has $accessRight on $mailbox"
+       
+    } #close if
+elseif($accessRights.accessRights -ne "FullAccess"){
+        Write-Host "Automapping Off, FullAccess and SendAs" -ForegroundColor Cyan
+        Write-Host "Adding $userRequiringAccess $accessRight on $mailbox" -foregroundColor Yellow
+        
+        Add-Content "$logfile" "Adding $userRequiringAccess $accessRight on $mailbox"
+        Add-Content "$logfile" "Adding $userRequiringAccess SendAs permission on $mailbox"
+
+        $ProgressBar1.Value = 50
+        $LabelStatus.Text = "Adding $userRequiringAccess $accessRight on $mailbox"
+
+        Add-MailboxPermission -Identity "$mailbox" -User "$userRequiringAccess" -AccessRights FullAccess -AutoMapping $false | Out-File -Encoding Ascii -append "$logfile"
+        Add-RecipientPermission "$mailbox" -AccessRights SendAs -Trustee "$userRequiringAccess" -Confirm:$false
+
+    } #close elseif
+else {
+
+        Write-Host "No task completed" -foregroundColor red
+        Add-Content "$logfile" "No task completed"
+        $ProgressBar1.Value = 50
+        $LabelStatus.Text = "No task completed, see log file"
+} #close else
+} #Webmail only with SendAs
+elseif ($CheckBoxAddToOutlook){
+
+    $accessRight = "FullAccess"
+    
+    $mailboxes = Get-mailbox
+    $userRequiringAccess = $ListBoxUserGainingAccess.SelectedItem
+
+    $accessRights = $null
+    $accessRights = Get-MailboxPermission "$($mailbox.primarysmtpaddress)" -User $userRequiringAccess -erroraction SilentlyContinue
+    
+    $ProgressBar1.Value = 25
+    $LabelStatus.Text = " "
+
+     
+    if ($accessRights.accessRights -eq "FullAccess") {
+        Write-Host "Automapping Off, FullAccess Only" -ForegroundColor Cyan
+        Write-Host "$userRequiringAccess already has $accessRight on $mailbox" -ForegroundColor Green
+        
+        Add-Content "$logfile" "$userRequiringAccess already has $accessRight on $mailbox"
+        
+        $ProgressBar1.Value = 50
+        $LabelStatus.Text = "$userRequiringAccess already has $accessRight on $mailbox"
+       
+    } #close if
+elseif($accessRights.accessRights -ne "FullAccess"){
+        Write-Host "Automapping Off, FullAccess Only" -ForegroundColor Cyan
+        Write-Host "Adding $userRequiringAccess $accessRight on $mailbox" -foregroundColor Yellow
+        
+        Add-Content "$logfile" "Adding $userRequiringAccess $accessRight on $mailbox"
+        Add-Content "$logfile" "Adding $userRequiringAccess SendAs permission on $mailbox"
+
+        $ProgressBar1.Value = 50
+        $LabelStatus.Text = "Adding $userRequiringAccess $accessRight on $mailbox"
+
+        Add-MailboxPermission -Identity "$mailbox" -User "$userRequiringAccess" -AccessRights FullAccess -AutoMapping $false | Out-File -Encoding Ascii -append "$logfile"
+        
+    } #close elseif
+else {
+
+        Write-Host "No task completed" -foregroundColor red
+        Add-Content "$logfile" "No task completed"
+        $ProgressBar1.Value = 50
+        $LabelStatus.Text = "No task completed, see log file"
+} #close else
+} #Webmail only
+
+
+
+
+##############
+
+
+
+
+$ProgressBar1.Value = 100
+$LabelStatus.Text = "Completed Tasks, see log file for info"
+})
+
+
+$Form.ShowDialog()
