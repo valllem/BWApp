@@ -1,174 +1,132 @@
-﻿
+﻿$logfile = "C:\BWApp\Logs\Log.txt"
+$mailboxes = Get-Mailbox |Select-Object PrimarySmtpAddress
+
 Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()
-try {
-$mailboxes = Get-Mailbox |Select-Object PrimarySmtpAddress
-}
 
-catch {
-write-host -ForegroundColor Red "NOT LOGGED IN. Please select 'switch account' on the main menu "
-}
+$Form                            = New-Object system.Windows.Forms.Form
+$Form.ClientSize                 = '500,648'
+$Form.text                       = "Remove User Full Access to 1 Mailbox"
+$Form.TopMost                    = $false
 
+$LabelUserGainingAccess          = New-Object system.Windows.Forms.Label
+$LabelUserGainingAccess.text     = "User being Removed"
+$LabelUserGainingAccess.AutoSize  = $true
+$LabelUserGainingAccess.width    = 25
+$LabelUserGainingAccess.height   = 10
+$LabelUserGainingAccess.location  = New-Object System.Drawing.Point(262,49)
+$LabelUserGainingAccess.Font     = 'Microsoft Sans Serif,10,style=Bold'
+$LabelUserGainingAccess.ForeColor  = "#000000"
 
-$calendarAccess1                 = New-Object system.Windows.Forms.Form
-$calendarAccess1.ClientSize      = '600,420'
-$calendarAccess1.text            = "Remove Mailbox Access"
-$calendarAccess1.TopMost         = $false
-$calendarAccess1.StartPosition = 'CenterScreen'
+$ListBoxUserGainingAccess        = New-Object system.Windows.Forms.ListBox
+$ListBoxUserGainingAccess.text   = "User being Removed"
+$ListBoxUserGainingAccess.width  = 216
+$ListBoxUserGainingAccess.height  = 362
+$ListBoxUserGainingAccess.location  = New-Object System.Drawing.Point(262,81)
+foreach ($mailbox in $mailboxes) {[void] $ListBoxUserGainingAccess.Items.Add($mailbox.PrimarySmtpAddress)}
 
-$ListBox1                        = New-Object system.Windows.Forms.ListBox
-$ListBox1.text                   = "listBox"
-$ListBox1.width                  = 169
-$ListBox1.height                 = 258
-$ListBox1.location               = New-Object System.Drawing.Point(38,77)
-foreach ($mailbox in $mailboxes) {[void] $ListBox1.Items.Add($mailbox.PrimarySmtpAddress)}
+$CheckBoxAddToOutlook            = New-Object system.Windows.Forms.CheckBox
+$CheckBoxAddToOutlook.text       = "Add Mailbox to Outlook?"
+$CheckBoxAddToOutlook.AutoSize   = $false
+$CheckBoxAddToOutlook.width      = 194
+$CheckBoxAddToOutlook.height     = 20
+$CheckBoxAddToOutlook.location   = New-Object System.Drawing.Point(19,472)
+$CheckBoxAddToOutlook.Font       = 'Microsoft Sans Serif,10,style=Bold'
 
-$ListBox2                        = New-Object system.Windows.Forms.ListBox
-$ListBox2.text                   = "listBox"
-$ListBox2.width                  = 166
-$ListBox2.height                 = 258
-$ListBox2.location               = New-Object System.Drawing.Point(327,77)
-foreach ($mailbox in $mailboxes) {[void] $ListBox2.Items.Add($mailbox.PrimarySmtpAddress)}
+$ButtonRunScript                 = New-Object system.Windows.Forms.Button
+$ButtonRunScript.BackColor       = "#7ed321"
+$ButtonRunScript.text            = "Run Script"
+$ButtonRunScript.width           = 397
+$ButtonRunScript.height          = 30
+$ButtonRunScript.location        = New-Object System.Drawing.Point(44,509)
+$ButtonRunScript.Font            = 'Microsoft Sans Serif,10,style=Bold'
 
-$Button1                         = New-Object system.Windows.Forms.Button
-$Button1.text                    = "OK"
-$Button1.width                   = 60
-$Button1.height                  = 30
-$Button1.location                = New-Object System.Drawing.Point(280,372)
-$Button1.Font                    = 'Microsoft Sans Serif,10'
-$Button1.DialogResult = [System.Windows.Forms.DialogResult]::OK
-$calendarAccess1.AcceptButton = $Button1
-$calendarAccess1.Controls.Add($Button1)
+$ProgressBar1                    = New-Object system.Windows.Forms.ProgressBar
+$ProgressBar1.width              = 398
+$ProgressBar1.height             = 60
+$ProgressBar1.location           = New-Object System.Drawing.Point(44,546)
 
-$Button2                         = New-Object system.Windows.Forms.Button
-$Button2.text                    = "Cancel"
-$Button2.width                   = 60
-$Button2.height                  = 30
-$Button2.location                = New-Object System.Drawing.Point(208,373)
-$Button2.Font                    = 'Microsoft Sans Serif,10'
-$Button2.DialogResult = [System.Windows.Forms.DialogResult]::Cancel
-$calendarAccess1.CancelButton = $Button2
-$calendarAccess1.Controls.Add($Button2)
+$LabelStatus                     = New-Object system.Windows.Forms.Label
+$LabelStatus.text                = "Status: Ready"
+$LabelStatus.AutoSize            = $true
+$LabelStatus.width               = 25
+$LabelStatus.height              = 10
+$LabelStatus.location            = New-Object System.Drawing.Point(19,616)
+$LabelStatus.Font                = 'Microsoft Sans Serif,10'
 
-$Identity                        = New-Object system.Windows.Forms.Label
-$Identity.text                   = "Account to Remove Access"
-$Identity.AutoSize               = $true
-$Identity.width                  = 25
-$Identity.height                 = 10
-$Identity.location               = New-Object System.Drawing.Point(42,49)
-$Identity.Font                   = 'Microsoft Sans Serif,10'
-$calendarAccess1.Controls.Add($Identity)
+$ListBoxMailboxToManage          = New-Object system.Windows.Forms.ListBox
+$ListBoxMailboxToManage.text     = "Mailbox to Manage"
+$ListBoxMailboxToManage.width    = 218
+$ListBoxMailboxToManage.height   = 362
+$ListBoxMailboxToManage.location  = New-Object System.Drawing.Point(19,81)
+foreach ($mailbox in $mailboxes) {[void] $ListBoxMailboxToManage.Items.Add($mailbox.PrimarySmtpAddress)}
 
-$User                            = New-Object system.Windows.Forms.Label
-$User.text                       = "Person being removed"
-$User.AutoSize                   = $true
-$User.width                      = 25
-$User.height                     = 10
-$User.location                   = New-Object System.Drawing.Point(340,49)
-$User.Font                       = 'Microsoft Sans Serif,10'
-$calendarAccess1.Controls.Add($User)
+$LabelMailboxToManage            = New-Object system.Windows.Forms.Label
+$LabelMailboxToManage.text       = "Mailbox to Manage"
+$LabelMailboxToManage.AutoSize   = $true
+$LabelMailboxToManage.width      = 25
+$LabelMailboxToManage.height     = 10
+$LabelMailboxToManage.location   = New-Object System.Drawing.Point(19,49)
+$LabelMailboxToManage.Font       = 'Microsoft Sans Serif,10,style=Bold'
 
+$CheckBoxGiveSendAs              = New-Object system.Windows.Forms.CheckBox
+$CheckBoxGiveSendAs.text         = "Give Send As Permission?"
+$CheckBoxGiveSendAs.AutoSize     = $false
+$CheckBoxGiveSendAs.width        = 202
+$CheckBoxGiveSendAs.height       = 20
+$CheckBoxGiveSendAs.location     = New-Object System.Drawing.Point(262,472)
+$CheckBoxGiveSendAs.Font         = 'Microsoft Sans Serif,10,style=Bold'
 
-$calendarAccess1.controls.AddRange(@($ListBox1,$ListBox2,$Button1,$Button2,$Identity,$User))
+$Form.controls.AddRange(@($LabelUserGainingAccess,$ListBoxUserGainingAccess,$ButtonRunScript,$ProgressBar1,$LabelStatus,$ListBoxMailboxToManage,$LabelMailboxToManage))
 
-$calendarAccess1.Controls.Add($ListBox1)
-$calendarAccess1.Controls.Add($ListBox2)
-$calendarAccess1.Controls.Add($ListBox3)
+$ButtonRunScript.Add_Click({
 
+    $ProgressBar1.Value = 25
+    $LabelStatus.Text = "Starting..."
 
-$calendarAccess1.Topmost = $true
-
-
-$result = $calendarAccess1.ShowDialog()
-
-if ($result -eq [System.Windows.Forms.DialogResult]::OK)
-{
-    $x = $ListBox1.SelectedItem
-    $y = $ListBox2.SelectedItem
-    $z = $ListBox3.SelectedItem
-
-## -- Create The Progress-Bar
-	$ObjForm = New-Object System.Windows.Forms.Form
-	$ObjForm.Text = "Running Task"
-	$ObjForm.Height = 100
-	$ObjForm.Width = 500
-	$ObjForm.BackColor = "White"
-
-	$ObjForm.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedSingle
-	$ObjForm.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
-
-	## -- Create The Label
-	$ObjLabel = New-Object System.Windows.Forms.Label
-	$ObjLabel.Text = "Starting Task. Please wait ... "
-	$ObjLabel.Left = 5
-	$ObjLabel.Top = 10
-	$ObjLabel.Width = 500 - 20
-	$ObjLabel.Height = 15
-	$ObjLabel.Font = "Tahoma"
-	## -- Add the label to the Form
-	$ObjForm.Controls.Add($ObjLabel)
-
-	$PB = New-Object System.Windows.Forms.ProgressBar
-	$PB.Name = "PowerShellProgressBar"
-	$PB.Value = 10
-	$PB.Style="Continuous"
-
-	$System_Drawing_Size = New-Object System.Drawing.Size
-	$System_Drawing_Size.Width = 500 - 40
-	$System_Drawing_Size.Height = 20
-	$PB.Size = $System_Drawing_Size
-	$PB.Left = 5
-	$PB.Top = 40
-	$ObjForm.Controls.Add($PB)
-
-	## -- Show the Progress-Bar and Start The PowerShell Script
-	$ObjForm.Show() | Out-Null
-	$ObjForm.Focus() | Out-NUll
-	$ObjLabel.Text = "Preparing Script. Please wait ... "
-	$ObjForm.Refresh()
-
-	Start-Sleep -Milliseconds 300
-#####
-    $ObjForm.Refresh()
-    $PB.Value = 25
-	$ObjLabel.Text = "Adjusting Permissions"
-	Start-Sleep -Milliseconds 300
-
-
-    $ObjForm.Refresh()
-    $PB.Value = 50
-	$ObjLabel.Text = "Removing $y permissions from $x"
-	$ObjForm.Refresh()
-	Start-Sleep -Milliseconds 300
-
-    Remove-MailboxPermission –Identity $x -User $y -AccessRights FullAccess -InheritanceType All -Confirm:$false
-    Remove-RecipientPermission $x -AccessRights SendAs -Trustee $y -Confirm:$false
-
-    $ObjForm.Refresh()
-    $PB.Value = 75
-	$ObjLabel.Text = "Successfully removed permissions"
-	$ObjForm.Refresh()
-	Start-Sleep -Milliseconds 300
-    
-    write-host 'Successfully removed Full Access permissions'
-    Add-Content "$logfile" "====================="
-    Add-Content "$logfile" "$DateTime"
-    Add-Content "$Logfile" "$RunningUser"
-    Add-Content "$logfile" "Removed $y Full Access to $x"
-
-    
-    
-    
-    $ObjForm.Refresh()
-    $PB.Value = 99
-	$ObjLabel.Text = "Completed Task"
-	$ObjForm.Refresh()
-	Start-Sleep -Milliseconds 300
-
-    $ObjForm.Close()
+    $mailbox = $ListBoxMailboxToManage.SelectedItem
+    $userRequiringAccess = $ListBoxUserGainingAccess.SelectedItem
 
 
 
-Start-Sleep -Seconds 1
-exit
-}
+    $accessRight = "FullAccess"
+ 
+    $mailboxes = Get-mailbox
+    $userRequiringAccess = $ListBoxUserGainingAccess.SelectedItem
+
+    $accessRights = $null
+    $accessRights = Get-MailboxPermission "$($mailbox.primarysmtpaddress)" -User $userRequiringAccess -erroraction SilentlyContinue
+    
+    $ProgressBar1.Value = 25
+    $LabelStatus.Text = " "
+
+     
+   
+        Write-Host "$userRequiringAccess being removed from $mailbox" -ForegroundColor Green
+        Add-Content "$logfile" "$userRequiringAccess being removed from $mailbox"
+        $ProgressBar1.Value = 50
+        $LabelStatus.Text = "$userRequiringAccess being removed from $mailbox"
+        
+        Remove-MailboxPermission -Identity "$mailbox" -User "$userRequiringAccess" -AccessRights FullAccess -Confirm:$false
+
+
+        $ProgressBar1.Value = 75
+        $LabelStatus.Text = "$userRequiringAccess being removed from $mailbox SendAs"
+        Write-Host "$userRequiringAccess being removed from $mailbox SendAs" -ForegroundColor Green
+        Add-Content "$logfile" "$userRequiringAccess being removed from $mailbox SendAs"
+        Remove-RecipientPermission "$mailbox" -AccessRights SendAs -Trustee "$userRequiringAccess" -Confirm:$false
+
+
+
+
+##############
+
+
+
+
+$ProgressBar1.Value = 100
+$LabelStatus.Text = "Completed Tasks, see log file for info"
+})
+
+
+$Form.ShowDialog()

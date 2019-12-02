@@ -3,7 +3,7 @@
 if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')) {
  if ([int](Get-CimInstance -Class Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber) -ge 6000) {
   $CommandLine = "-File `"" + $MyInvocation.MyCommand.Path + "`" " + $MyInvocation.UnboundArguments
-  Start-Process -FilePath PowerShell.exe -WindowStyle Minimized -Verb Runas -ArgumentList $CommandLine
+  Start-Process -FilePath PowerShell.exe -Verb Runas -ArgumentList $CommandLine
    
   Exit
  }
@@ -224,6 +224,14 @@ $ButtonFullAll.location          = New-Object System.Drawing.Point(160,165)
 $ButtonFullAll.Font              = 'Microsoft Sans Serif,10'
 $ButtonFullAll.ForeColor         = "#f5a623"
 
+$ButtonRemoveForward                   = New-Object system.Windows.Forms.Button
+$ButtonRemoveForward.text              = "Remove Forwarding"
+$ButtonRemoveForward.width             = 147
+$ButtonRemoveForward.height            = 30
+$ButtonRemoveForward.location          = New-Object System.Drawing.Point(328,165)
+$ButtonRemoveForward.Font              = 'Microsoft Sans Serif,10'
+$ButtonRemoveForward.ForeColor         = "#f5a623"
+
 $ButtonRemoveAll                 = New-Object system.Windows.Forms.Button
 $ButtonRemoveAll.text            = "Remove Access ALL"
 $ButtonRemoveAll.width           = 148
@@ -398,7 +406,7 @@ $GroupboxSecurity.location       = New-Object System.Drawing.Point(9,499)
 
 $CheckMailboxPerms               = New-Object system.Windows.Forms.Button
 $CheckMailboxPerms.text          = "Check Mailbox Perms"
-$CheckMailboxPerms.width         = 138
+$CheckMailboxPerms.width         = 166
 $CheckMailboxPerms.height        = 30
 $CheckMailboxPerms.location      = New-Object System.Drawing.Point(328,208)
 $CheckMailboxPerms.Font          = 'Microsoft Sans Serif,10'
@@ -438,7 +446,7 @@ $LabelSettings.height            = 10
 $LabelSettings.location          = New-Object System.Drawing.Point(202,28)
 $LabelSettings.Font              = 'Microsoft Sans Serif,10,style=Bold'
 
-$BWApp.controls.AddRange(@($ButtonCalendarAccess1,$ButtonGiveAccessAll,$ButtonRemoveAccess,$ButtonCheckAccess,$ButtonFullAccess1,$ButtonRemoveFull,$ButtonSendAs,$ButtonForward,$ButtonFullAll,$ButtonRemoveAll,$ButtonCheckLogs,$ButtonRenameUPN,$ButtonRenameUser,$ButtonDisableUser,$ButtonEnableUser,$ButtonBlockEmail,$ButtonBlockDomain,$ButtonPrepareTenancy,$ButtonEnableAuditLog,$LabelClickInstallPowershell,$LabelWiki,$LabelSignOutClose,$ButtonAllDistMembers,$ButtonAllPerms,$ButtonEnableOOF,$ButtonDisableOOF,$GroupBoxMenu,$ButtonAllForwards,$GroupboxMailBox,$GroupboxCalendar,$GroupboxUsers,$GroupboxSecurity,$CheckMailboxPerms,$LabelCustomCommand,$LabelLogs,$LabelReport,$LabelSettings))
+$BWApp.controls.AddRange(@($ButtonCalendarAccess1,$ButtonGiveAccessAll,$ButtonRemoveAccess,$ButtonCheckAccess,$ButtonFullAccess1,$ButtonRemoveFull,$ButtonSendAs,$ButtonForward,$ButtonFullAll,$ButtonRemoveAll,$ButtonCheckLogs,$ButtonRenameUPN,$ButtonRenameUser,$ButtonDisableUser,$ButtonEnableUser,$ButtonBlockEmail,$ButtonBlockDomain,$ButtonPrepareTenancy,$ButtonEnableAuditLog,$LabelClickInstallPowershell,$LabelWiki,$LabelSignOutClose,$ButtonAllDistMembers,$ButtonAllPerms,$ButtonEnableOOF,$ButtonDisableOOF,$GroupBoxMenu,$ButtonAllForwards,$GroupboxMailBox,$GroupboxCalendar,$GroupboxUsers,$GroupboxSecurity,$CheckMailboxPerms,$LabelCustomCommand,$LabelLogs,$LabelReport,$LabelSettings,$ButtonRemoveForward))
 
 $ButtonFullAccess1.Add_Click({.\MailboxGrantFull.ps1})
 $ButtonRemoveFull.Add_Click({.\MailboxRemoveFull.ps1})
@@ -467,6 +475,7 @@ $ButtonDisableOOF.Add_Click({.\365DisableOOF.ps1})
 $ButtonAllDistMembers.Add_Click({.\Get-All-DistMembers.ps1})
 $ButtonAllPerms.Add_Click({.\Get-All-Perms.ps1})
 $ButtonAllForwards.Add_Click({.\AllForwards.ps1})
+$ButtonRemoveForward.Add_Click({.\MailboxRemoveForward.ps1})
 $CheckMailboxPerms.Add_Click({.\MailboxCheck.ps1})
 $LabelCustomCommand.Add_Click({
 $pi = New-Object system.Diagnostics.ProcessStartInfo
@@ -475,10 +484,10 @@ $pi.Arguments = "-NoExit -noprofile -command C:\BWApp\BWApp-master\Blank365Conne
 [system.Diagnostics.Process]::Start($pi)
 
 })
-
-
 $LabelLogs.Add_Click({ii C:\BWApp\Logs\})
 $LabelReport.Add_Click({.\Report.ps1})
-$LabelSettings.Add_Click({.\Settings.ps1})
+$LabelSettings.Add_Click({.\Settings.ps1
+$BWApp.Refresh()
+})
 
 $result = $BWApp.ShowDialog()
