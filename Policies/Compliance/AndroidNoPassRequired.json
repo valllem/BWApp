@@ -1,0 +1,38 @@
+{
+    "@odata.type":  "#microsoft.graph.androidCompliancePolicy",
+    "roleScopeTagIds":  [
+                            "0"
+                        ],
+    "id":  "38f8c041-6ac8-b53a-066a-d3206fb56032",
+    "createdDateTime":  "2019-08-15T02:27:40.5837854Z",
+    "description":  "900f8baa-812e-4886-a598-61f73001bae8",
+    "lastModifiedDateTime":  "2019-08-15T02:27:40.5837854Z",
+    "displayName":  "Default compliance policy for Android",
+    "version":  1,
+    "passwordRequired":  false,
+    "passwordMinimumLength":  null,
+    "passwordRequiredType":  "deviceDefault",
+    "passwordMinutesOfInactivityBeforeLock":  null,
+    "passwordExpirationDays":  null,
+    "passwordPreviousPasswordBlockCount":  null,
+    "passwordSignInFailureCountBeforeFactoryReset":  null,
+    "securityPreventInstallAppsFromUnknownSources":  false,
+    "securityDisableUsbDebugging":  false,
+    "securityRequireVerifyApps":  false,
+    "deviceThreatProtectionEnabled":  false,
+    "deviceThreatProtectionRequiredSecurityLevel":  "unavailable",
+    "securityBlockJailbrokenDevices":  true,
+    "osMinimumVersion":  null,
+    "osMaximumVersion":  null,
+    "minAndroidSecurityPatchLevel":  null,
+    "storageRequireEncryption":  false,
+    "securityRequireSafetyNetAttestationBasicIntegrity":  false,
+    "securityRequireSafetyNetAttestationCertifiedDevice":  false,
+    "securityRequireGooglePlayServices":  false,
+    "securityRequireUpToDateSecurityProviders":  false,
+    "securityRequireCompanyPortalAppIntegrity":  false,
+    "conditionStatementId":  null,
+    "restrictedApps":  [
+
+                       ]
+}

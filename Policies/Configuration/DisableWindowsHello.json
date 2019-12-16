@@ -1,0 +1,30 @@
+{
+    "@odata.type":  "#microsoft.graph.windowsIdentityProtectionConfiguration",
+    "id":  "b5fa5dfb-97de-43d1-b7d0-ef86c96e952f",
+    "lastModifiedDateTime":  "2019-11-09T01:58:18.6526588Z",
+    "roleScopeTagIds":  [
+                            "0"
+                        ],
+    "supportsScopeTags":  true,
+    "deviceManagementApplicabilityRuleOsEdition":  null,
+    "deviceManagementApplicabilityRuleOsVersion":  null,
+    "deviceManagementApplicabilityRuleDeviceMode":  null,
+    "createdDateTime":  "2019-11-09T01:58:18.6526588Z",
+    "description":  "Disable Pin etc",
+    "displayName":  "User Security",
+    "version":  1,
+    "useSecurityKeyForSignin":  false,
+    "enhancedAntiSpoofingForFacialFeaturesEnabled":  false,
+    "pinMinimumLength":  null,
+    "pinMaximumLength":  null,
+    "pinUppercaseCharactersUsage":  "blocked",
+    "pinLowercaseCharactersUsage":  "blocked",
+    "pinSpecialCharactersUsage":  "blocked",
+    "pinExpirationInDays":  null,
+    "pinPreviousBlockCount":  null,
+    "pinRecoveryEnabled":  false,
+    "securityDeviceRequired":  false,
+    "unlockWithBiometricsEnabled":  false,
+    "useCertificatesForOnPremisesAuthEnabled":  false,
+    "windowsHelloForBusinessBlocked":  true
+}
