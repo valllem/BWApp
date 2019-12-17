@@ -992,6 +992,29 @@ $LabelStatus.text = "Status: Ready"
 $LabelStatus.ForeColor = "#7ed321"})
 $tooltip1.SetToolTip($SecurityEnableAuditLogging,'Turns on audit logging in the Tenancy')
 $Tenant.Controls.Add($SecurityEnableAuditLogging)
+
+#SecurityOutsiderImpersinating
+$SecurityOutsiderImpersinating                = New-Object system.Windows.Forms.Button
+$SecurityOutsiderImpersinating.text           = "Outside Senders"
+$SecurityOutsiderImpersinating.width          = 160
+$SecurityOutsiderImpersinating.height         = 30
+$System_Drawing_Point = New-Object System.Drawing.Point
+$System_Drawing_Point.X = 200
+$System_Drawing_Point.Y = 80
+$SecurityOutsiderImpersinating.location       = $System_Drawing_Point
+$SecurityOutsiderImpersinating.Font           = 'Microsoft Sans Serif,10,style=Bold'
+$SecurityOutsiderImpersinating.ForeColor      = "#d0021b"
+$SecurityOutsiderImpersinating.add_Click({
+$LabelStatus.text = "Status: Creating Transport Rule, please wait..."
+$LabelStatus.ForeColor = "#f5a623"
+write-host -ForegroundColor Cyan 'Creating Transport Rule, please wait...'
+.\Transport-OutsideSender.ps1
+$LabelStatus.text = "Status: Ready"
+$LabelStatus.ForeColor = "#7ed321"})
+$tooltip1.SetToolTip($SecurityOutsiderImpersinating,'Creates a rule that alerts the recipient if the outside sender has the same name as an internal user')
+$Tenant.Controls.Add($SecurityOutsiderImpersinating)
+
+
 ############SETTINGS
 
 #ConsoleWindow
