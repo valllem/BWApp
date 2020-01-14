@@ -105,12 +105,12 @@ Start-Sleep -Milliseconds 300
         }
         else {
             Write-Host "Could not add $accessRight permissions on $($mailbox.primarysmtpaddress)'s calendar for $userrequiringaccess" -ForegroundColor Red
-            Add-Content "Could not add $accessRight permissions on $($mailbox.primarysmtpaddress)'s calendar for $userrequiringaccess"
+            Add-Content "$Logfile" "Could not add $accessRight permissions on $($mailbox.primarysmtpaddress)'s calendar for $userrequiringaccess"
         }
     $ProgressBar1.Value = 80
     }else{
         Write-Host "Permission level already exists for $($userrequiringaccess.primarysmtpaddress) on $($mailbox.primarysmtpaddress)'s calendar" -foregroundColor Green
-        Add-Content "Permission level already exists for $($userrequiringaccess.primarysmtpaddress) on $($mailbox.primarysmtpaddress)'s calendar"
+        Add-Content "$Logfile" "Permission level already exists for $($userrequiringaccess.primarysmtpaddress) on $($mailbox.primarysmtpaddress)'s calendar"
     }
     $ProgressBar1.Value = 80
     $LabelStatus.Text = "Updating: $mailbox"
