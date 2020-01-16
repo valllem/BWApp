@@ -8,7 +8,7 @@ Add-Type -AssemblyName System.Windows.Forms
 
 $Form                            = New-Object system.Windows.Forms.Form
 $Form.ClientSize                 = '350,648'
-$Form.text                       = "Check Mailbox Permissions"
+$Form.text                       = "Offboard User"
 $Form.TopMost                    = $false
 
 $ButtonRunScript                 = New-Object system.Windows.Forms.Button
@@ -33,14 +33,14 @@ $LabelStatus.location            = New-Object System.Drawing.Point(60,616)
 $LabelStatus.Font                = 'Microsoft Sans Serif,10'
 
 $ListBoxMailboxToManage          = New-Object system.Windows.Forms.ListBox
-$ListBoxMailboxToManage.text     = "Mailbox to Check"
+$ListBoxMailboxToManage.text     = "Mailbox to offboard"
 $ListBoxMailboxToManage.width    = 220
 $ListBoxMailboxToManage.height   = 362
 $ListBoxMailboxToManage.location  = New-Object System.Drawing.Point(60,81)
 foreach ($mailbox in $mailboxes) {[void] $ListBoxMailboxToManage.Items.Add($mailbox.PrimarySmtpAddress)}
 
 $LabelMailboxToManage            = New-Object system.Windows.Forms.Label
-$LabelMailboxToManage.text       = "Mailbox to check permissions"
+$LabelMailboxToManage.text       = "Mailbox to Off-board"
 $LabelMailboxToManage.AutoSize   = $true
 $LabelMailboxToManage.width      = 25
 $LabelMailboxToManage.height     = 10
