@@ -75,7 +75,7 @@ $Tenant = $TextBoxTenant.Text
 
 Start-Sleep -Milliseconds 400
 $ProgressBar1.Value = 30
-$Status.Text = "Satus: Preparing, please wait"
+$Status.Text = "Status: Preparing, please wait"
 Start-Sleep -Seconds 2
 #Enable-OrganizationCustomization
 Start-Sleep -Seconds 2
@@ -83,40 +83,40 @@ $ProgressBar1.Value = 60
 
 Start-Sleep -Milliseconds 400
 $ProgressBar1.Value = 20
-$Status.Text = "Satus: Enabling Audit Logging"
+$Status.Text = "Status: Enabling Audit Logging"
 Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $true
 
 Start-Sleep -Milliseconds 400
 $ProgressBar1.Value = 30
-$Status.Text = "Satus: Securing Mailboxes"
+$Status.Text = "Status: Securing Mailboxes"
 
 Start-Sleep -Seconds 2
 $ProgressBar1.Value = 35
-$Status.Text = "Satus: Disabling POP/IMAP"
+$Status.Text = "Status: Disabling POP/IMAP"
 $mailboxes = Get-mailbox
 foreach ($mailbox in $mailboxes) {
     ## The PopEnabled parameter enables or disables access to the mailbox by using POP3 clients.
     Set-casmailbox $mailbox.PrimarySmtpAddress -popenabled $false
-    $Status.Text = "Satus: Disabling POP for $mailbox"
+    $Status.Text = "Status: Disabling POP for $mailbox"
     write-host -foregroundcolor yellow "Disabled POP for " $mailbox ""
     Start-Sleep -Milliseconds 400
     ## The ImapEnabled parameter enables or disables access to the mailbox by using IMAP4 clients.
     Set-casmailbox $mailbox.PrimarySmtpAddress -imapenabled $false
-    $Status.Text = "Satus: Disabling IMAP for $mailbox"
+    $Status.Text = "Status: Disabling IMAP for $mailbox"
     write-host -foregroundcolor yellow "Disabled IMAP for " $mailbox ""
     Start-Sleep -Milliseconds 400
 }
 ## Set Default POP IMAP settings
 write-host -ForegroundColor cyan 'Setting default POP / IMAP settings to DISABLED'
 $ProgressBar1.Value = 40
-$Status.Text = "Satus: Setting POP/IMAP default to disabled"
+$Status.Text = "Status: Setting POP/IMAP default to disabled"
 Start-Sleep -Milliseconds 400
 Get-CASMailboxPlan -Filter {ImapEnabled -eq "true" -or PopEnabled -eq "true" } | set-CASMailboxPlan -ImapEnabled $false -PopEnabled $false
 
 
 Start-Sleep -Milliseconds 400
 $ProgressBar1.Value = 50
-$Status.Text = "Satus: Configure SPAM Policy"
+$Status.Text = "Status: Configure SPAM Policy"
 #SPam Policy
 $policyname = "BusinessWorks Policy"
 $rulename = "BusinessWorks Configured Recpients"
@@ -162,7 +162,7 @@ Start-Sleep -Milliseconds 400
 
 Start-Sleep -Milliseconds 400
 $ProgressBar1.Value = 60
-$Status.Text = "Satus: Configure Malware Policy"
+$Status.Text = "Status: Configure Malware Policy"
 try{
 $mpolicyname = "BusinessWorks Malware Policy"
 $mrulename = "BusinessWorks Malware Rules"
@@ -197,7 +197,7 @@ write-host -foregroundcolor Red "Malware Policy NOT Set, Tenant may not have cor
 
 Start-Sleep -Milliseconds 400
 $ProgressBar1.Value = 70
-$Status.Text = "Satus: Transport Rule: Outside Sender Matches Internal User"
+$Status.Text = "Status: Transport Rule: Outside Sender Matches Internal User"
 Write-Host -ForegroundColor Yellow "Creating Transport rule: Outside Sender Matches Internal User"
 $ruleName = "External Senders with matching Display Names"
 $ruleHtml = "<table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0 align=left width=`"100%`" style='width:100.0%;mso-cellspacing:0cm;mso-yfti-tbllook:1184; mso-table-lspace:2.25pt;mso-table-rspace:2.25pt;mso-table-anchor-vertical:paragraph;mso-table-anchor-horizontal:column;mso-table-left:left;mso-padding-alt:0cm 0cm 0cm 0cm'>  <tr style='mso-yfti-irow:0;mso-yfti-firstrow:yes;mso-yfti-lastrow:yes'><td style='background:#910A19;padding:5.25pt 1.5pt 5.25pt 1.5pt'></td><td width=`"100%`" style='width:100.0%;background:#FDF2F4;padding:5.25pt 3.75pt 5.25pt 11.25pt; word-wrap:break-word' cellpadding=`"7px 5px 7px 15px`" color=`"#212121`"><div><p class=MsoNormal style='mso-element:frame;mso-element-frame-hspace:2.25pt; mso-element-wrap:around;mso-element-anchor-vertical:paragraph;mso-element-anchor-horizontal: column;mso-height-rule:exactly'><span style='font-size:9.0pt;font-family: `"Segoe UI`",sans-serif;mso-fareast-font-family:`"Times New Roman`";color:#212121'>This message was sent from outside the company by someone with a display name matching a user in your organisation. Please do not click links or open attachments unless you recognise the source of this email and know the content is safe. <o:p></o:p></span></p></div></td></tr></table>"
@@ -217,7 +217,7 @@ Write-Host -ForegroundColor Green "Transport Rule Complete"
 ###########################################################################################################################################
 Start-Sleep -Milliseconds 400
 $ProgressBar1.Value = 80
-$Status.Text = "Satus: Preparing to Import Policies - user input required"
+$Status.Text = "Status: Preparing to Import Policies - user input required"
 ##########################################################################
 
 
@@ -552,7 +552,7 @@ Add-DeviceCompliancePolicy -JSON $JSON_Output
 ###########################################################################################################################################
 Start-Sleep -Milliseconds 400
 $ProgressBar1.Value = 90
-$Status.Text = "Satus: Preparing to Import Device Policies"
+$Status.Text = "Status: Preparing to Import Device Policies"
 ##########################################################################
 
 
@@ -1045,14 +1045,14 @@ Write-Host -ForegroundColor Yellow "Remember to assign the Intune Policies to us
 
 Start-Sleep -Milliseconds 400
 $ProgressBar1.Value = 100
-$Status.Text = "Satus: Tenancy Preparation Completed"
+$Status.Text = "Status: Tenancy Preparation Completed"
 
 Write-Host
 Write-Host -ForegroundColor Green "Tenancy Preparation Complete!"
 
 Start-Sleep -Milliseconds 400
 $ProgressBar1.Value = 100
-$Status.Text = "Satus: Tenancy Preparation Completed"
+$Status.Text = "Status: Tenancy Preparation Completed"
 
 
   })
