@@ -904,7 +904,25 @@ $tooltip1.SetToolTip($AccountsChangeNames,'Update a users First and Last name')
 $Accounts.Controls.Add($AccountsChangeNames)
 
 #AccountsDisable
-
+$AccountsDisable                = New-Object system.Windows.Forms.Button
+$AccountsDisable.text           = "Offboard User"
+$AccountsDisable.width          = 160
+$AccountsDisable.height         = 30
+$System_Drawing_Point = New-Object System.Drawing.Point
+$System_Drawing_Point.X = 30
+$System_Drawing_Point.Y = 80
+$AccountsDisable.location       = $System_Drawing_Point
+$AccountsDisable.Font           = 'Microsoft Sans Serif,10,style=Bold'
+$AccountsDisable.ForeColor      = "#7ed321"
+$AccountsDisable.add_Click({
+$LabelStatus.text = "Status: Disabling Account"
+$LabelStatus.ForeColor = "#f5a623"
+write-host -ForegroundColor Cyan 'Disable Account'
+.\AccountsDisable.ps1
+$LabelStatus.text = "Status: Ready"
+$LabelStatus.ForeColor = "#7ed321"})
+$tooltip1.SetToolTip($AccountsDisable,'Disable a user account')
+$Accounts.Controls.Add($AccountsDisable)
 
 #AccountsEnable
 $AccountsEnable                = New-Object system.Windows.Forms.Button
