@@ -1,6 +1,6 @@
 ﻿$logfile = "C:\BWApp\Logs\Log.txt"
 $mailboxes = Get-Mailbox |Select-Object PrimarySmtpAddress
-
+Connect-ExchangeOnline
 Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
@@ -111,7 +111,7 @@ if($permission -eq $null){
 $ProgressBar1.Value = 100
 $LabelStatus.Text = "Status: Tasks Complete."
 
-
+Disconnect-ExchangeOnline -Confirm:$false
 })
 
 
