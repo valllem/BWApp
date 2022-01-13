@@ -63,6 +63,22 @@ catch {
     Import-PSSession $EXOSession
 }
 
+$answer = [System.Windows.Forms.MessageBox]::Show(
+	"A new app is available to download.
+The new app is in development and currently is only usable if you use Microsoft's Partner Network.
+Support for single tenant use is likely to be added sometime soon.
+
+Did you want to install the new version? (Runs along side the current)", "A New App is available!", "YesNo", "Question", "Button1")
+if ($answer -eq 'Yes')
+{
+	$Installerurl = "https://github.com/valllem/My365Partner/raw/main/Installer/BWApp-Installer.msi"
+	$TempInstaller = "C:\Temp\BWApp-Installer.msi"
+	(New-Object System.Net.WebClient).DownloadFile($Installerurl, $TempInstaller)
+	Invoke-Item -Path $TempInstaller
+	ii "C:\Program Files\DCNetworks\BWApp\"
+}
+
+
  $logfile = "C:\BWApp\Logs\Log.txt"   
     
 #[reflection.assembly]::loadwithpartialname("System.Windows.Forms") | Out-Null
