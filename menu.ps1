@@ -75,6 +75,7 @@ if ($answer -eq 'Yes')
 	$TempInstaller = "C:\Temp\BWApp-Installer.msi"
 	(New-Object System.Net.WebClient).DownloadFile($Installerurl, $TempInstaller)
 	Invoke-Item -Path $TempInstaller
+	Start-Sleep -Seconds 5
 	ii "C:\Program Files\DCNetworks\BWApp\"
 }
 
